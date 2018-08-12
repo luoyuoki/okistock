@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oki.stock.dao.OrderDao">
+
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="orderId" keyColumn="order_id"
+            parameterType="com.oki.stock.entity.Order">
+        INSERT INTO order_info(openid,stock_id,stock_name,stock_scope,quote_price,quote_nums,order_type,order_status,commit_time)
+        VALUES(#{openid},#{stockId},#{stockName},#{stockScope},#{quotePrice},#{quoteNums},#{orderType},#{orderStatus},#{commitTime})
+    </insert>
+
+    <update id="updateOrder" parameterType="com.oki.stock.entity.Order">
+        UPDATE order_info
+        <set>
+            <if test="exchangePrice!=null">
+                exchange_price=#{exchangePrice},
+            </if>
+            <if test="exchangeTime!=null">
+                exchange_time=#{exchangeTime},
+            </if>
+            order_status=#{orderStatus}
+        </set>
+        WHERE order_id=#{orderId}
+    </update>
+
+    <update id="updateOrderStatusToFail">
+        UPDATE order_info SET order_status='2' WHERE order_status='0';
+    </update>
+
+    <delete id="deleteOrderByFail">
+        DELETE FROM order_info WHERE order_status='2';
+    </delete>
+
+    <select id="queryNewOrders" resultType="com.oki.stock.entity.Order">
+        SELECT order_id,stock_name,quote_price,quote_nums,order_type,order_status,commit_time FROM order_info WHERE openid=#{openid}
+    </select>
+
+    <select id="querySuccessOrders" resultType="com.oki.stock.entity.Order">
+        SELECT order_id,order_type,stock_name,exchange_price,quote_nums,exchange_time FROM order_info
+        WHERE openid=#{openid} AND order_status='1'
+    </select>
+
+</mapper>

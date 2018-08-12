@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oki.stock.dao.StockDao">
+
+
+    <select id="queryHkStocks" resultType="com.oki.stock.entity.Stock">
+        SELECT stock_id,stock_name,current_price,change_percent FROM oki_stock WHERE stock_scope='hk'
+    </select>
+
+    <select id="queryUsStocks" resultType="com.oki.stock.entity.Stock">
+        SELECT stock_id,stock_name,current_price,change_percent FROM oki_stock WHERE stock_scope='us'
+    </select>
+
+    <select id="queryStockById" resultType="com.oki.stock.entity.Stock">
+        SELECT * FROM oki_stock WHERE stock_id=#{stockId}
+    </select>
+
+    <select id="queryStock" resultType="com.oki.stock.dto.StockDto">
+        SELECT stock_name,current_price,stock_scope FROM oki_stock WHERE stock_id=#{stockId}
+    </select>
+
+
+</mapper>

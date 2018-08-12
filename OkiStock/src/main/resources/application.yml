@@ -1,0 +1,9 @@
+user:
+  assets:
+    hk: 200000
+    us: 20000
+
+
+wechat:
+  appId:
+  appSecret:
