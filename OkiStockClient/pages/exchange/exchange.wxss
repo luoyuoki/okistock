@@ -1,0 +1,194 @@
+#section_quotation {
+    width: 100%;
+    height: 200rpx;
+    margin-top: 21rpx;
+    position: relative;
+}
+
+.quota_price {
+    width: 280rpx;
+    height: 80rpx;
+    position: absolute;
+    text-align: center;
+    line-height: 80rpx;
+}
+
+.quota_zd {
+    width: 140rpx;
+    height: 47rpx;
+    position: absolute;
+    top: 70rpx;
+    left: 70rpx;
+    line-height: 47rpx;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#section_quotation .quota_arrow {
+    width: 2rpx;
+    height: 8rpx;
+}
+
+#section_quotation .quota_item {
+    font-size: 26rpx;
+    color: #888;
+}
+
+#section_quotation .quota_row1 {
+    position: absolute;
+    top: 20rpx;
+}
+
+#section_quotation .quota_row2 {
+    position: absolute;
+    top: 70rpx;
+}
+
+#section_quotation .quota_row3 {
+    position: absolute;
+    top: 90rpx;
+}
+
+#section_quotation .quota_row4 {
+    position: absolute;
+    top: 130rpx;
+}
+
+#section_quotation .quota_row5 {
+    position: absolute;
+    top: 180rpx;
+}
+
+#section_quotation .quota_row6 {
+    position: absolute;
+    top: 230rpx;
+}
+
+#section_quotation .quota_colum1 {
+    position: absolute;
+    left: 40rpx;
+}
+
+#section_quotation .quota_colum2 {
+    position: absolute;
+    left: 135rpx;
+}
+
+#section_quotation .quota_colum3 {
+    position: absolute;
+    left: 293rpx;
+}
+
+#section_quotation .quota_colum4 {
+    position: absolute;
+    left: 382rpx;
+}
+
+#section_quotation .quota_colum5 {
+    position: absolute;
+    left: 554rpx;
+}
+
+#section_quotation .quota_colum6 {
+    position: absolute;
+    left: 622rpx;
+}
+
+.quote_form {
+    width: 100%;
+    height: 220rpx;
+    position: relative;
+    margin-top: 100rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+}
+
+.quote_container {
+    width: 100%;
+    margin-top: 240rpx;
+}
+
+.quote_input {
+    width: 420rpx;
+    height: 80rpx;
+    border-style: solid;
+    background: white;
+    border-color: rgb(228, 228, 228);
+    border-width: 1px;
+    border-radius: 12rpx;
+    align-items: center;
+    box-sizing: border-box;
+    margin-left: 20rpx;
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+}
+
+.quote_info {
+    widows: 100%;
+    height: 120rpx;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+    margin-left: 50rpx;
+    margin-bottom: 20rpx;
+    align-items: center;
+}
+
+.quote_info_order {
+    display: flex;
+    flex-direction: row;
+    margin-left: 50rpx;
+    margin-top: 15rpx;
+}
+
+.quote_info_most {
+    width: 750rpx;
+    margin-top: 10rpx;
+}
+
+.quote_info_most .buy_title {
+    position: absolute;
+    left: 50rpx;
+}
+
+.quote_info_most .buy {
+    position: absolute;
+    left: 200rpx;
+}
+
+.quote_info_most .sell_title {
+    position: absolute;
+    left: 400rpx;
+}
+
+.quote_info_most .sell {
+    position: absolute;
+    left: 550rpx;
+}
+
+.quote_button {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10rpx;
+}
+
+.button_blue {
+    width: 300rpx;
+    background-color: #269ce9;
+    border-color: #269ce9;
+    font: bold;
+    color: white;
+}
+
+.button_hover {
+    background-color: #70b9e8;
+}
+

@@ -1,0 +1,69 @@
+<view id="section_quotation">
+    <view class="{{stockName.length>5?'S8':'S9'}} quota_price">{{stockName}}</view>
+    <view class="quota_zd {{rise?'C1-font':'C2-font'}}">{{currentPrice}}</view>
+
+    <text class="quota_item quota_row1 quota_colum3">涨跌幅:</text>
+    <text class="quota_item quota_row2 quota_colum3">昨\t收\t:</text>
+    <text class="S3 quota_row1 quota_colum4 {{rise?'C1-font':'C2-font'}}">{{changePercent}}</text>
+    <text class="quota_item quota_row2 quota_colum4">{{lastPrice}}</text>
+
+    <text class="quota_item quota_row1 quota_colum5">涨跌:</text>
+    <text class="quota_item quota_row2 quota_colum5">今开:</text>
+    <text class="S3 quota_row1 quota_colum6 {{rise?'C1-font':'C2-font'}}">{{changePrice}}</text>
+    <text class="quota_item quota_row2 quota_colum6">{{beginPrice}}</text>
+
+    <text class="quota_item quota_row4 quota_colum1">最\t高\t:</text>
+    <text class="quota_item quota_row4 quota_colum3">最\t低\t:</text>
+    <text class="quota_item quota_row4 quota_colum5">市值:</text>
+    <text class="quota_item quota_row4 quota_colum2">{{highestPrice}}</text>
+    <text class="quota_item quota_row4 quota_colum4">{{lowestPrice}}</text>
+    <text class="quota_item quota_row4 quota_colum6">{{marketValue}}</text>
+
+    <text class="quota_item quota_row5 quota_colum1">成交额:</text>
+    <text class="quota_item quota_row5 quota_colum3">成交量:</text>
+    <text class="quota_item quota_row5 quota_colum5">振幅:</text>
+    <text class="quota_item quota_row5 quota_colum2">{{turnoverAsset}}</text>
+    <text class="quota_item quota_row5 quota_colum4">{{turnoverNums}}</text>
+    <text class="quota_item quota_row5 quota_colum6">{{shockRange}}</text>
+
+    <text class="quota_item quota_row6 quota_colum1">市盈率:</text>
+    <text class="quota_item quota_row6 quota_colum3">换手率:</text>
+    <text class="quota_item quota_row6 quota_colum5">每手:</text>
+    <text class="quota_item quota_row6 quota_colum2">{{peRatio}}</text>
+    <text class="quota_item quota_row6 quota_colum4">{{turnoverRate}}</text>
+    <text class="quota_item quota_row6 quota_colum6">{{roundNums}}股</text>
+
+</view>
+
+<form class="quote_form B1" bindsubmit="orderSubmit">
+    <view class="quote_container">
+        <view class="flex_row">
+            <text class="S5 T3">交易价格:</text>
+            <input class="quote_input S8 T3" type="digit" name="quotePrice" placeholder="请报价" placeholder-class="S4 T1" value="{{quotePrice}}" bindinput="watchPrice" maxlength="6" focus="{{focusPrice}}" />
+        </view>
+        <view class="flex_row">
+            <text class="S5 T3">交易数量:</text>
+            <input class="quote_input S8 T3" type="number" name="quoteNums" placeholder="数量为每手的整数倍" placeholder-class="S4 T1" value="{{quoteNums}}" bindinput="watchNums" maxlength="6" focus="{{focusNums}}" />
+        </view>
+    </view>
+
+
+    <view class="quote_info">
+        <view class="quote_info_order">
+            <text class="S4 T2">订单金额:</text>
+            <text class="S4 T2">\r\t{{orderPrice}}\r\t元</text>
+        </view>
+        <view class="quote_info_most">
+            <text class="S4 T2 buy_title">最多可买:</text>
+            <text class="S4 T2 buy">{{mostBuy}}\r\t股</text>
+            <text class="S4 T2 sell_title">最多可卖:</text>
+            <text class="S4 T2 sell">{{mostSell}}\r\t股</text>
+
+        </view>
+    </view>
+    <view class="quote_button">
+        <button class="button_blue" hover-class="button_hover" id="buy" form-type="submit">买\r\t\r\t入</button>
+        <button class="button_blue" hover-class="button_hover" id="sell" form-type="submit">卖\r\t\r\t出</button>
+    </view>
+
+</form>

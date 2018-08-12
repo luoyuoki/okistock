@@ -1,0 +1,25 @@
+.error_container{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.error_img {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    width: 256rpx;
+    height: 256rpx;
+}
+
+.error_tips {
+    position: absolute;
+    left: 48%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+    font-style: italic;
+}

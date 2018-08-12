@@ -1,0 +1,138 @@
+<view class="C3-bg marquee" wx:if="{{marqueeContent}}">
+    <view class="T4 marquee-text" style="{{orientation}}:{{marqueeDistance}}rpx;font-size: {{marqueeFontSize}}rpx;">
+        <text>{{marqueeContent}}</text>
+    </view>
+</view>
+
+<view class="assets_container">
+    <view class="assets_item_container">
+        <view class="user_data_container">
+            <image src="{{avatarUrl}}" class="user-avatar"></image>
+            <text class="S7 T3">{{nickName}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">港股资产</text>
+            <text class="S6 T3">{{hkAssets}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">美股资产</text>
+            <text class="S6 T3">{{usAssets}}</text>
+        </view>
+    </view>
+    <view class="assets_item_container">
+        <view class="item_data_container">
+            <text class="S2 T2">港股可用现金</text>
+            <text class="S6 T3">{{hkRestDollar}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">港股盈亏</text>
+            <text class="S6 T3">{{hkProfitAmount}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">港股盈亏比</text>
+            <text class="S6 {{hkRise?'C1-font':'C2-font'}}">{{hkProfitPercent}}</text>
+        </view>
+    </view>
+    <view class="assets_item_container">
+        <view class="item_data_container">
+            <text class="S2 T2">美股可用现金</text>
+            <text class="S6 T3">{{usRestDollar}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">美股盈亏</text>
+            <text class="S6 T3">{{usProfitAmount}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">美股盈亏比</text>
+            <text class="S6 {{usRise?'C1-font':'C2-font'}}">{{usProfitPercent}}</text>
+        </view>
+    </view>
+    <view class="assets_item_container">
+        <view class="item_data_container">
+            <text class="S2 T2">港股冻结资金</text>
+            <text class="S6 T3">{{hkFrozenCapital}}</text>
+        </view>
+        <view class="item_data_container">
+            <text class="S2 T2">美股冻结资金</text>
+            <text class="S6 T3">{{usFrozenCapital}}</text>
+        </view>
+    </view>
+</view>
+
+<view class="split_view B1" />
+
+<view class="tab_container">
+    <block wx:for="{{tabArr}}" wx:key="*this">
+        <text class="S4  tab_item_text {{currentTab==index?'C4-font':'T3'}}" data-index="{{index}}" bindtap="onTabItemClickEvent" style="font-weight:{{currentTab==index?'bold':'normal'}};">{{item}}</text>
+    </block>
+    <view class="C4-bg tab_item_sel_line_container" style="left:{{currentTab*33.3}}%;" />
+</view>
+
+<view wx:if="{{currentTab == 0}}" class="lisetview_data_container B1" style="height: 70rpx">
+    <text class="S2 T2 lisetview_item_left_container">股票</text>
+    <text class="S2 T2 lisetview_item_left_container">成本价</text>
+    <text class="S2 T2 lisetview_item_left_container">数量</text>
+    <text class="S2 T2 lisetview_item_left_container">盈亏</text>
+    <text class="S2 T2 lisetview_item_left_container">盈亏比</text>
+</view>
+
+<view wx:if="{{currentTab == 1}}" class="lisetview_data_container B1" style="height: 70rpx">
+    <text class="S2 T2 lisetview_item_left_container">状态</text>
+    <text class="S2 T2 lisetview_item_left_container">股票</text>
+    <text class="S2 T2 lisetview_item_left_container">订单价</text>
+    <text class="S2 T2 lisetview_item_left_container">数量</text>
+    <text class="S2 T2 lisetview_item_left_container">时间</text>
+</view>
+
+<view wx:if="{{currentTab == 2}}" class="lisetview_data_container B1" style="height: 70rpx">
+    <text class="S2 T2 lisetview_item_left_container">类型</text>
+    <text class="S2 T2 lisetview_item_left_container">股票</text>
+    <text class="S2 T2 lisetview_item_left_container">成交价</text>
+    <text class="S2 T2 lisetview_item_left_container">数量</text>
+    <text class="S2 T2 lisetview_item_left_container">日期</text>
+</view>
+
+<view wx:if="{{(stockHolderList == null || stockHolderList.length==0) && currentTab == 0}}" class="empty_container">
+    <image src="/images/empty1.png" class="empty_img"></image>
+    <text class="S6 T5 empty_tips">空 仓 中</text>
+</view>
+<block wx:if="{{currentTab == 0}}" wx:for="{{stockHolderList}}" wx:key="stockId">
+    <view class="lisetview_data_container" data-stock-id="{{item.stockId}}" data-stock-scope="{{item.stockScope}}" catchtap="onTapStockItem">
+        <text class="S5 T3 lisetview_item_left_container">{{item.stockName}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.costPrice}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.stockNums}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.profitAmount}}</text>
+        <text class="S5 lisetview_item_left_container {{item.rise?'C1-font':'C2-font'}}">{{item.profitPercent}}</text>
+    </view>
+</block>
+
+<view wx:if="{{(newOrderList == null || newOrderList.length==0) && currentTab == 1}}" class="empty_container">
+    <image src="/images/empty2.png" class="empty_img_2"></image>
+    <text class="S6 T5 empty_tips">今天还没有买卖</text>
+</view>
+<block wx:if="{{currentTab == 1}}" wx:for="{{newOrderList}}" wx:key="orderId">
+    <view class="lisetview_data_container">
+        <view class="lisetview_item_left_container">
+            <text class="S5 T3">{{item.orderType == '0'?'买入':'卖出'}}</text>
+            <text class="S1 T2">{{item.orderStatus == '0'? '等待成交':item.orderStatus == '1'?'交易成功':'交易失败'}}</text>
+        </view>
+        <text class="S5 T3 lisetview_item_left_container">{{item.stockName}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.quotePrice}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.quoteNums}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.commitTime}}</text>
+    </view>
+</block>
+
+<view wx:if="{{(successOrderList == null || successOrderList.length==0) && currentTab == 2}}" class="empty_container">
+    <image src="/images/empty3.png" class="empty_img_3"></image>
+    <text class="S6 T5 empty_tips">下个单试试？</text>
+</view>
+<block wx:if="{{currentTab == 2}}" wx:for="{{successOrderList}}" wx:key="orderId">
+    <view class="lisetview_data_container">
+        <text class="S5 T3 lisetview_item_left_container">{{item.orderType == '0'?'买入':'卖出'}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.stockName}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.exchangePrice}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.quoteNums}}</text>
+        <text class="S5 T3 lisetview_item_left_container">{{item.exchangeTime}}</text>
+    </view>
+</block>

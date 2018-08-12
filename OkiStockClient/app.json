@@ -1,0 +1,58 @@
+{
+    "pages": [
+        "pages/welcome/welcome",
+        "pages/my/my",
+        "pages/hk/hk",
+        "pages/us/us",
+        "pages/rank/rank",
+        "pages/about/about",
+        "pages/exchange/exchange",
+        "pages/error/error"
+    ],
+    "window": {
+        "navigationBarBackgroundColor": "#37383b",
+        "navigationBarTitleText": "茉莉股",
+        "navigationBarTextStyle": "white",
+        "enablePullDownRefresh": false
+    },
+    "tabBar": {
+        "color": "#666666",
+        "selectedColor": "#ff7a00",
+        "list": [
+            {
+                "pagePath": "pages/hk/hk",
+                "text": "港股",
+                "iconPath": "images/hk.png",
+                "selectedIconPath": "images/hk_focus.png"
+            },
+            {
+                "pagePath": "pages/us/us",
+                "text": "美股",
+                "iconPath": "images/us.png",
+                "selectedIconPath": "images/us_focus.png"
+            },
+            {
+                "pagePath": "pages/my/my",
+                "text": "我的",
+                "iconPath": "images/my.png",
+                "selectedIconPath": "images/my_focus.png"
+            },
+            {
+                "pagePath": "pages/rank/rank",
+                "text": "排行榜",
+                "iconPath": "images/rank.png",
+                "selectedIconPath": "images/rank_focus.png"
+            },
+            {
+                "pagePath": "pages/about/about",
+                "text": "关于",
+                "iconPath": "images/about.png",
+                "selectedIconPath": "images/about_focus.png"
+            }
+        ]
+    },
+    "networkTimeout": {
+        "request": 10000,
+        "downloadFile": 10000
+    }
+}

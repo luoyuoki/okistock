@@ -1,0 +1,9 @@
+<template name='stockItem'>
+    <view class="stock_container" data-stock-id='{{stockId}}' catchtap="onTapStockItem">
+        <view class="container_item">
+            <text class="S5 T3 item_name">{{stockName}}</text>
+            <text class="S7 T3 item_price">{{currentPrice}}</text>
+            <text class="S7 T4 item_percent {{rise?'C1-bg': 'C2-bg'}}">{{changePercent}}</text>
+        </view>
+    </view>
+</template>

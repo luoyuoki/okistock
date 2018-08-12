@@ -1,0 +1,87 @@
+const app = getApp()
+const http = require('../../utils/http.js')
+const util = require('../../utils/util.js')
+
+Page({
+
+    data: {
+        canIUse: wx.canIUse('button.open-type.getUserInfo')
+    },
+
+    onLoad: function (options) {
+        var openid = wx.getStorageSync('openid')
+        if (openid) {
+            wx.switchTab({
+                url: '../my/my',
+            })
+        } else {
+            wx.getSetting({
+                success: function (res) {
+                    if (res.authSetting['scope.userInfo']) {
+                        wx.getUserInfo({
+                            success: function (res) {
+                                console.log(res.userInfo)
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    },
+
+    doStart: function (e) {
+        if (e.detail.userInfo == null) {
+            wx.showModal({
+                title: '提示',
+                content: '需要你的授权才可正常使用',
+                showCancel: false
+            })
+            return
+        }
+        wx.login({
+            success: res => {
+                var code = res.code
+                if (code) {
+                    var data = { 'code': code, 'nickName': e.detail.userInfo.nickName, 'avatarUrl': e.detail.userInfo.avatarUrl }
+                    http.doGet('/login', data, this.processLoginData)
+                }
+
+            }
+        })
+
+    },
+
+    processLoginData: data => {
+        var success = data.success
+        if (success) {
+            var openid = data.openid
+            app.globalData.openid = openid
+            wx.switchTab({
+                url: '../my/my',
+            })
+            wx.setStorageSync('openid', openid)
+        } else {
+            util.showServerErrorToast()
+        }
+    },
+
+
+    onReady: function () {
+
+    },
+
+
+    onShow: function () {
+
+    },
+
+
+    onHide: function () {
+
+    },
+
+    onUnload: function () {
+
+    },
+
+})

@@ -1,0 +1,17 @@
+<import src="../../template/stock-item.wxml" />
+
+<view class="C3-bg marquee" wx:if="{{isTrading}}">
+    <view class="T4 marquee-text" style="{{orientation}}:{{marqueeDistance}}rpx;font-size: {{marqueeFontSize}}rpx;">
+        <text>{{marqueeContent}}</text>
+    </view>
+</view>
+
+<view class="container_header B1">
+    <text class="S2 T2 header_left">股票</text>
+    <text class="S2 T2 header_center">价格</text>
+    <text class="S2 T2 header_right">涨跌幅</text>
+</view>
+
+<view wx:for="{{stockList}}" wx:key="stockId">
+    <template is='stockItem' data='{{...item}}' />
+</view>

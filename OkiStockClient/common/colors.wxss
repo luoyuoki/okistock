@@ -1,0 +1,67 @@
+.B1 {
+    background-color: rgb(239, 239, 244);
+}
+
+.B2 {
+    background-color: rgb(255, 255, 255);
+}
+
+.B3 {
+    background-color: rgb(228, 228, 228);
+}
+
+.C1-bg {
+    background-color: rgb(235, 51, 59);
+}
+
+.C2-bg {
+    background-color: rgb(23, 176, 62);
+}
+
+.C3-bg {
+    background-color: rgb(87, 107, 149);
+}
+
+.C4-bg {
+    background-color: #d4237a;
+}
+
+.C1-font {
+    color: rgb(235, 51, 59);
+}
+
+.C2-font {
+    color: rgb(23, 176, 62);
+}
+
+.C3-font {
+    color: #ff7a00;
+}
+
+.C4-font {
+    color: #d4237a;
+}
+
+.T1 {
+    color: rgb(178, 178, 178);
+}
+
+.T2 {
+    color: rgb(136, 136, 136);
+}
+
+.T3 {
+    color: rgb(53, 53, 53);
+}
+
+.T4 {
+    color: rgb(255, 255, 255);
+}
+
+.T5 {
+    color: #cdcdcd;
+}
+
+.T6 {
+    color: #bfbfbf;
+}

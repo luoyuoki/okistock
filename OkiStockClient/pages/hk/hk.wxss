@@ -1,0 +1,42 @@
+@import "../../template/stock-item.wxss";
+@import "../../template/marquee.wxss";
+
+.container_header {
+  position: relative;
+  padding-left: 60rpx;
+  padding-right: 60rpx;
+  width: 100%;
+  height: 70rpx;
+  box-sizing: border-box;
+  border-bottom: 1rpx solid #e4e4e4;
+  border-top: 1rpx solid #e4e4e4;
+}
+
+.header_left {
+  position: relative;
+  display: inline-block;
+  width: 34%;
+  height: 100%;
+  line-height: 70rpx;
+  text-align: left;
+  align-content: left;
+}
+
+.header_center {
+  position: relative;
+  display: inline-block;
+  width: 33%;
+  height: 100%;
+  line-height: 70rpx;
+  text-align: center;
+}
+
+.header_right {
+  position: relative;
+  display: inline-block;
+  width: 33%;
+  height: 100%;
+  line-height: 70rpx;
+  text-align: right;
+}
+

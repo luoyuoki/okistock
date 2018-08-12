@@ -1,0 +1,39 @@
+.S1 {
+  font-size: 22rpx;
+}
+
+.S2 {
+  font-size: 26rpx;
+}
+
+.S3 {
+  font-size: 28rpx;
+}
+
+.S4 {
+  font-size: 30rpx;
+}
+
+.S5 {
+  font-size: 32rpx;
+}
+
+.S6 {
+  font-size: 34rpx;
+}
+
+.S7 {
+  font-size: 36rpx;
+}
+
+.S8 {
+  font-size: 38rpx;
+}
+
+.S9 {
+  font-size: 48rpx;
+}
+
+.S_BOLD{
+  font-weight:bold;
+}

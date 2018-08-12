@@ -1,0 +1,24 @@
+<view class="tab_container">
+    <block wx:for="{{tabArr}}" wx:key="*this">
+        <text class="S6 tab_item_text {{currentTab==index?'C4-font':'T3'}}" data-index="{{index}}" bindtap="onTabItemClickEvent" style="font-weight:{{currentTab==index?'bold':'normal'}};">{{item}}</text>
+    </block>
+    <view class="C4-bg tab_item_sel_line_container" style="left:{{currentTab*50}}%;" />
+</view>
+
+<block wx:if="{{currentTab == 0}}" wx:for="{{hkRankList}}" wx:key="nickName">
+    <view class="lisetview_data_container">
+        <text class="S5 lisetview_item_left_container {{item.isMine?'C3-font':'T3'}}">No.{{index + 1}}</text>
+        <image src="{{item.avatarUrl}}" class="user-avatar"></image>
+        <text class="S5 lisetview_item_middle_container {{item.isMine?'C3-font':'T3'}}">{{item.nickName}}</text>
+        <text class="S7 T4 lisetview_item_right_container {{item.rise?'C1-bg': 'C2-bg'}}">{{item.hkProfitPercent}}</text>
+    </view>
+</block>
+
+<block wx:if="{{currentTab == 1}}" wx:for="{{usRankList}}" wx:key="nickName">
+    <view class="lisetview_data_container">
+        <text class="S5 lisetview_item_left_container {{item.isMine?'C3-font':'T3'}}">No.{{index + 1}}</text>
+        <image src="{{item.avatarUrl}}" class="user-avatar"></image>
+        <text class="S5 lisetview_item_middle_container {{item.isMine?'C3-font':'T3'}}">{{item.nickName}}</text>
+        <text class="S7 T4 lisetview_item_right_container {{item.rise?'C1-bg': 'C2-bg'}}">{{item.usProfitPercent}}</text>
+    </view>
+</block>

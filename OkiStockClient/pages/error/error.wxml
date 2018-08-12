@@ -1,0 +1,4 @@
+<view class="error_container">
+    <image class="error_img" src="/images/error.png"></image>
+    <text class="S4 T6 error_tips">有状况，序员有可能正在解决</text>
+</view>

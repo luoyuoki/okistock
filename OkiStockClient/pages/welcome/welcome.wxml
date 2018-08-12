@@ -1,0 +1,11 @@
+<view class="container">
+    <image class="avatar" src="/images/moli.png"></image>
+    <text class="motto">假设你有一笔闲钱</text>
+    <text class="motto2">打算拿去股市做点投资</text>
+    <text class="motto2">用人民币兑换了 20万港元</text>
+    <text class="motto2">加 2万美元</text>
+    <text class="motto2">然后</text>
+    <view class="journey-container">
+        <button class="journey" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="doStart">进去看看</button>
+    </view>
+</view>

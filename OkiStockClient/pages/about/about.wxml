@@ -1,0 +1,13 @@
+<view class="question_container">
+    <block wx:for="{{questionList}}" wx:key="title">
+        <view class="question_item_container">
+            <text class="S5 T2 title">{{index + 1}}. {{item.title}}</text>
+            <text class="S5 T3 answer">答：{{item.answer}}</text>
+        </view>
+    </block>
+
+    <form wx:if="{{questionList}}" bindsubmit="bindFormSubmit">
+        <textarea class="S5 T3 advice_input" name="advice" value="{{content}}" placeholder="有什么问题吗？" placeholder-class="S3 T5" maxlength="60"></textarea>
+        <button form-type="submit" class="advice_submit">发 射</button>
+    </form>
+</view>
