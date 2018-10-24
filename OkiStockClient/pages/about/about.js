@@ -1,6 +1,6 @@
-const app = getApp()
-const http = require('../../utils/http.js')
-const util = require('../../utils/util.js')
+const App = getApp()
+const Http = require('../../utils/http.js')
+const Util = require('../../utils/util.js')
 
 Page({
 
@@ -25,32 +25,32 @@ Page({
 
     requestQuestionList: function() {
         var data = {}
-        http.doGet('/about/main', data, this.processQuestionList)
+        Http.doGet('/about/main', data, this.processQuestionList)
     },
 
-    processQuestionList: function(data) {
-        if (data.success) {
+    processQuestionList: function(response) {
+        if (response.code === App.RESP_OK) {
             this.setData({
-                questionList: data.questionList
+                questionList: response.data
             })
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
     bindFormSubmit: function(form) {
         this.myForm = form
-        http.doPost('/about/advice', app.globalData.nickName + ":" + util.formatTime(new Date()) + ":" + form.detail.value.advice, this.processAdviceData)
+        Http.doPost('/about/advice', App.globalData.nickName + ":" + Util.formatTime(new Date()) + ":" + form.detail.value.advice, this.processAdviceData)
     },
 
-    processAdviceData: function(data) {
-        if (data.success) {
-            util.showToast('发射成功', true)
+    processAdviceData: function(response) {
+        if (response.code === App.RESP_OK) {
+            Util.showToast('发射成功', true)
             this.setData({
                 content: ''
             })
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
@@ -70,7 +70,7 @@ Page({
             return
         }
         if (this.data.isReachedBottom && !this.data.isShowTips) {
-            util.showToast('就先到这吧，没事来逛逛')
+            Util.showToast('就先到这吧，没事来逛逛')
             this.setData({
                 isShowTips: true
             })

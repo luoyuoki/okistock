@@ -1,6 +1,6 @@
-const app = getApp()
-const http = require('../../utils/http.js')
-const util = require('../../utils/util.js')
+const App = getApp()
+const Http = require('../../utils/http.js')
+const Util = require('../../utils/util.js')
 
 var intervalId = 0
 
@@ -42,10 +42,10 @@ Page({
     },
 
     onLoad: function(options) {
-        var openid = app.globalData.openid
+        var openid = App.globalData.openid
         if (!openid) {
             openid = wx.getStorageSync('openid')
-            app.globalData.openid = openid
+            App.globalData.openid = openid
         }
 
     },
@@ -56,13 +56,14 @@ Page({
 
     requestMyData: function() {
         var data = {
-            'openid': app.globalData.openid
+            'openid': App.globalData.openid
         }
-        http.doGet('/my/main', data, this.processMyData)
+        Http.doGet('/my/main', data, this.processMyData)
     },
 
-    processMyData: function(data) {
-        if (data.success) {
+    processMyData: function(response) {
+        if (response.code === App.RESP_OK) {
+            var data = response.data
             this.setData({
                 openid: data.user.openid,
                 nickName: data.user.nickName,
@@ -80,12 +81,15 @@ Page({
                 hkFrozenCapital: data.user.hkFrozenCapital,
                 usFrozenCapital: data.user.usFrozenCapital,
 
+                stockHolderList: data.holderList,
+                marqueeContent: data.notification.message,
+
+                hkTrading: data.tradingFlag.hkTrading,
+                usTrading: data.tradingFlag.usTrading
             })
 
             var index = this.data.currentTab
-            if (index == 0) {
-                this.requestHolderList()
-            } else if (index == 1) {
+            if (index == 1) {
                 var data = {
                     'openid': this.data.openid,
                     'needUpdateAssets': false
@@ -95,18 +99,18 @@ Page({
                 this.requestSuccessOrderList()
             }
 
-            app.globalData.nickName = this.data.nickName
-            this.requestNotification()
+            App.globalData.nickName = this.data.nickName
+            this.processNotification()
 
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
     onShow: function() {
-        if (app.globalData.showNewOrder) {
+        if (App.globalData.showNewOrder) {
             var data = {
-                'openid': app.globalData.openid,
+                'openid': App.globalData.openid,
                 'needUpdateAssets': true
             }
             this.requestRefreshNewOrder(data)
@@ -130,33 +134,15 @@ Page({
         this.requestMyData()
     },
 
-    requestHolderList: function() {
-        var data = {
-            'openid': this.data.openid
-        }
-        http.doGet('/my/hold', data, this.processHolderList)
-    },
-
-    processHolderList: function(data) {
-        if (data.success) {
-            this.setData({
-                stockHolderList: data.stockHolderList,
-                hkTrading: data.hkTrading,
-                usTrading: data.usTrading
-            })
-        } else {
-            util.showServerErrorToast()
-        }
-    },
-
     requestRefreshNewOrder: function(data) {
         var data = data
-        http.doGet('/my/new', data, this.processNewOrderList)
+        Http.doGet('/my/new', data, this.processNewOrderList)
     },
 
-    processNewOrderList: function(data) {
-        if (data.success) {
-            if (app.globalData.showNewOrder) {
+    processNewOrderList: function(response) {
+        if (response.code === App.RESP_OK) {
+            var data = response.data
+            if (App.globalData.showNewOrder) {
                 this.setData({
                     currentTab: 1,
                     newOrderList: data.newOrderList,
@@ -165,14 +151,14 @@ Page({
                     usRestDollar: data.usRestDollar,
                     usFrozenCapital: data.usFrozenCapital,
                 })
-                app.globalData.showNewOrder = false
+                App.globalData.showNewOrder = false
             } else {
                 this.setData({
                     newOrderList: data.newOrderList
                 })
             }
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
@@ -180,16 +166,16 @@ Page({
         var data = {
             'openid': this.data.openid
         }
-        http.doGet('/my/success', data, this.processSuccessOrderList)
+        Http.doGet('/my/success', data, this.processSuccessOrderList)
     },
 
-    processSuccessOrderList: function(data) {
-        if (data.success) {
+    processSuccessOrderList: function(response) {
+        if (response.code === App.RESP_OK) {
             this.setData({
-                successOrderList: data.successOrderList
+                successOrderList: response.data
             })
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
@@ -226,26 +212,16 @@ Page({
         })
     },
 
-    requestNotification: function() {
-        var data = {}
-        http.doGet('/my/notifier', data, this.processNotification)
-    },
+    processNotification: function() {
+        var contentLength = this.data.marqueeContent.length * this.data.marqueeFontSize //文字长度
+        var windowWidth = wx.getSystemInfoSync().windowWidth // 屏幕宽度
+        this.setData({
+            contentLength: contentLength,
+            windowWidth: windowWidth,
+            marqueeDistance: windowWidth + contentLength,
+        })
 
-    processNotification: function(data) {
-        if (data.notification) {
-            this.setData({
-                marqueeContent: data.notification.message
-            })
-            var contentLength = this.data.marqueeContent.length * this.data.marqueeFontSize //文字长度
-            var windowWidth = wx.getSystemInfoSync().windowWidth // 屏幕宽度
-            this.setData({
-                contentLength: contentLength,
-                windowWidth: windowWidth,
-                marqueeDistance: windowWidth + contentLength,
-            })
-            
-            this.marqueeRun()
-        }
+        this.marqueeRun()
     },
 
     marqueeRun: function() {

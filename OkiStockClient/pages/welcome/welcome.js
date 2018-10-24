@@ -1,6 +1,6 @@
-const app = getApp()
-const http = require('../../utils/http.js')
-const util = require('../../utils/util.js')
+const App = getApp()
+const Http = require('../../utils/http.js')
+const Util = require('../../utils/util.js')
 
 Page({
 
@@ -43,7 +43,7 @@ Page({
                 var code = res.code
                 if (code) {
                     var data = { 'code': code, 'nickName': e.detail.userInfo.nickName, 'avatarUrl': e.detail.userInfo.avatarUrl }
-                    http.doGet('/login', data, this.processLoginData)
+                    Http.doGet('/login', data, this.processLoginData)
                 }
 
             }
@@ -51,17 +51,16 @@ Page({
 
     },
 
-    processLoginData: data => {
-        var success = data.success
-        if (success) {
-            var openid = data.openid
-            app.globalData.openid = openid
+    processLoginData: response => {
+        if (response.code === App.RESP_OK) {
+            var openid = response.data.openid
+            App.globalData.openid = openid
             wx.switchTab({
                 url: '../my/my',
             })
             wx.setStorageSync('openid', openid)
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 

@@ -1,6 +1,6 @@
-const app = getApp()
-const http = require('../../utils/http.js')
-const util = require('../../utils/util.js')
+const App = getApp()
+const Http = require('../../utils/http.js')
+const Util = require('../../utils/util.js')
 
 Page({
 
@@ -43,16 +43,17 @@ Page({
             isTrading: options.trading
         })
 
-        var openid = app.globalData.openid
+        var openid = App.globalData.openid
         var data = {
             'stockId': stockId,
             'openid': openid
         }
-        http.doGet('/stock/get', data, this.processStockData)
+        Http.doGet('/stock/detail', data, this.processStockData)
     },
 
-    processStockData: function(data) {
-        if (data.success) {
+    processStockData: function(response) {
+        if (response.code === App.RESP_OK) {
+            var data = response.data
             this.setData({
                 stockId: data.stock.stockId,
                 stockName: data.stock.stockName,
@@ -76,7 +77,7 @@ Page({
                 mostSell: data.mostSell
             })
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
@@ -113,11 +114,11 @@ Page({
     },
 
     orderSubmit: function(form) {
-        if (!this.isTrading) {
+        if (!this.data.isTrading) {
             if (this.data.stockScope == 'hk') {
-                util.showToast('现在是港股非交易时段，不能下单', false)
+                Util.showToast('现在是港股非交易时段，不能下单', false)
             } else if (this.data.stockScope == 'us') {
-                util.showToast('现在是美股非交易时段，不能下单', false)
+                Util.showToast('现在是美股非交易时段，不能下单', false)
             }
             return
         }
@@ -131,8 +132,8 @@ Page({
             return
         }
 
-        if (!util.isNumber(this.quotePrice) || !util.isNumber(this.quoteNums)) {
-            util.showToast('你有点调皮', false)
+        if (!Util.isNumber(this.quotePrice) || !Util.isNumber(this.quoteNums)) {
+            Util.showToast('你有点调皮', false)
             return
         }
 
@@ -158,17 +159,17 @@ Page({
             formData.orderType = '1'
         }
 
-        formData.openid = app.globalData.openid
+        formData.openid = App.globalData.openid
         formData.stockId = this.data.stockId
         formData.stockName = this.data.stockName
         formData.stockScope = this.data.stockScope
 
-        http.doPost('/stock/order', formData, this.processOrderData)
+        Http.doPost('/stock/order', formData, this.processOrderData)
     },
 
-    processOrderData: function(data) {
-        if (data.success) {
-            app.globalData.showNewOrder = true
+    processOrderData: function(response) {
+        if (response.code === App.RESP_OK) {
+            App.globalData.showNewOrder = true
             wx.showToast({
                 title: '提交订单成功',
                 icon: 'success',
@@ -182,8 +183,8 @@ Page({
                 }
             })
         } else {
-            app.globalData.showNewOrder = false
-            util.showServerErrorToast()
+            App.globalData.showNewOrder = false
+            Util.showServerErrorToast()
         }
     },
 
@@ -204,7 +205,7 @@ Page({
     calcAmount: function(price, nums) {
         if (price && nums) {
             var amount = '-'
-            if (util.isNumber(price) && util.isNumber(nums)) {
+            if (Util.isNumber(price) && Util.isNumber(nums)) {
                 amount = (price * nums).toFixed(2)
             }
             this.setData({

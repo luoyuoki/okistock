@@ -19,7 +19,7 @@ function doGet(path, data, callBack) {
                 url: '/pages/error/error',
             })
         },
-        complete: () => {
+        complete: function() {
             wx.hideNavigationBarLoading()
         }
     })
@@ -46,7 +46,7 @@ function doPost(path, data, callBack) {
                 url: '/pages/error/error',
             })
         },
-        complete: () => {
+        complete: function() {
             wx.hideNavigationBarLoading()
         }
     })

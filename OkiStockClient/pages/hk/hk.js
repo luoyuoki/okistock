@@ -1,5 +1,6 @@
-const http = require('../../utils/http.js')
-const util = require('../../utils/util.js')
+const App = getApp()
+const Http = require('../../utils/http.js')
+const Util = require('../../utils/util.js')
 
 var intervalId = 0
 
@@ -33,11 +34,12 @@ Page({
 
     requestStockList: function() {
         var data = {}
-        http.doGet('/stock/hk', data, this.processStockList)
+        Http.doGet('/stock/hk', data, this.processStockList)
     },
 
-    processStockList: function(data) {
-        if (data.success) {
+    processStockList: function(response) {
+        if (response.code === App.RESP_OK) {
+            var data = response.data
             this.setData({
                 stockList: data.stockList,
                 isTrading: data.trading
@@ -58,7 +60,7 @@ Page({
                 this.marqueeRun()
             }
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 

@@ -1,6 +1,6 @@
-const app = getApp()
-const http = require('../../utils/http.js')
-const util = require('../../utils/util.js')
+const App = getApp()
+const Http = require('../../utils/http.js')
+const Util = require('../../utils/util.js')
 
 Page({
 
@@ -16,7 +16,7 @@ Page({
 
     onLoad: function(options) {
         this.setData({
-            myName: app.globalData.nickName
+            myName: App.globalData.nickName
         })
     },
 
@@ -30,49 +30,49 @@ Page({
 
     requestHkRankList: function() {
         var data = {}
-        http.doGet('/rank/hk', data, this.processHkRankList)
+        Http.doGet('/rank/hk', data, this.processHkRankList)
     },
 
     requestUsRankList: function() {
         var data = {}
-        http.doGet('/rank/us', data, this.processUsRankList)
+        Http.doGet('/rank/us', data, this.processUsRankList)
     },
 
-    processHkRankList: function(data) {
-        if (data.success) {
-            var hkRankList = data.hkRankList
+    processHkRankList: function(response) {
+        if (response.code === App.RESP_OK) {
+            var hkRankList = response.data
             for (var item in hkRankList) {
                 var rank = hkRankList[item]
                 var name = rank.nickName
                 rank.isMine = this.data.myName == name ? true : false
-                rank.nickName = util.filterSensitive(name)
+                rank.nickName = Util.filterSensitive(name)
             }
 
             this.setData({
                 hkRankList: hkRankList
             })
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
-    processUsRankList: function(data) {
-        if (data.success) {
-            var usRankList = data.usRankList
+    processUsRankList: function (response) {
+        if (response.code === App.RESP_OK) {
+            var usRankList = response.data
             for (var item in usRankList) {
                 var rank = usRankList[item]
                 var name = rank.nickName
                 rank.isMine = this.data.myName == name ? true : false
-                rank.nickName = util.filterSensitive(name)
+                rank.nickName = Util.filterSensitive(name)
             }
 
             this.setData({
-                usRankList: data.usRankList
+                usRankList: usRankList
             })
 
             this.isClicked = true
         } else {
-            util.showServerErrorToast()
+            Util.showServerErrorToast()
         }
     },
 
@@ -104,7 +104,7 @@ Page({
     },
 
     onReachBottom: function() {
-        util.showToast('让我们恭喜这些上榜的朋友', false)
+        Util.showToast('让我们恭喜这些上榜的朋友', false)
     }
 
 })
