@@ -1,16 +1,17 @@
 package com.oki.stock.service.impl;
 
+import com.oki.stock.common.CodeMsg;
 import com.oki.stock.dao.UserDao;
-import com.oki.stock.dto.ProfitDto;
-import com.oki.stock.dto.UserDto;
+import com.oki.stock.dto.ProfitDTO;
+import com.oki.stock.dto.UserDTO;
 import com.oki.stock.entity.User;
+import com.oki.stock.exception.StockServerException;
 import com.oki.stock.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,23 +20,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @Transactional
     @Override
+    @Transactional
     public boolean addUser(User user) {
-        if (!StringUtils.isEmpty(user.getOpenid()) && !StringUtils.isEmpty(user.getNickName()) && !StringUtils.isEmpty(user.getAvatarUrl())) {
-            user.setUpdateTime(new Date());
-            try {
-                int effectedNums = userDao.insertUser(user);
-                if (effectedNums > 0) {
-                    return true;
-                } else {
-                    throw new RuntimeException("添加新用户失败");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("添加新用户失败：" + e.getMessage());
-            }
+        if (StringUtils.isEmpty(user.getOpenid()) || StringUtils.isEmpty(user.getNickName()) || StringUtils.isEmpty(user.getAvatarUrl())) {
+            throw new StockServerException(CodeMsg.ADD_USER_INFO_EMPTY);
+        }
+        int effectedNums = userDao.insertUser(user);
+        if (effectedNums > 0) {
+            return true;
         } else {
-            throw new RuntimeException("添加新用户关键信息为空");
+            throw new StockServerException(CodeMsg.ADD_USER_ERROR);
         }
     }
 
@@ -45,10 +40,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserInfoByOpenid(String openid) {
+    public UserDTO getUserInfoByOpenid(String openid) {
         User user = userDao.queryUserByOpenid(openid);
         if (user != null) {
-            UserDto ud = new UserDto();
+            UserDTO ud = new UserDTO();
             ud.setOpenid(user.getOpenid());
             ud.setNickName(user.getNickName());
             ud.setAvatarUrl(user.getAvatarUrl());
@@ -84,36 +79,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean modifyUserAssets(User user) {
-        if (user.getUserId() > 0) {
-            try {
-                user.setUpdateTime(new Date());
-                int effectedNums = userDao.updateUserAssets(user);
-                if (effectedNums > 0) {
-                    return true;
-                } else {
-                    throw new RuntimeException("更新资产失败");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("更新资产失败：" + e.getMessage());
-            }
+        int effectedNums = userDao.updateUserAssets(user);
+        if (effectedNums > 0) {
+            return true;
         } else {
-            throw new RuntimeException("用户ID错误");
+            throw new StockServerException(CodeMsg.MODIFY_USER_ASSETS_ERROR);
         }
     }
 
     @Override
-    public List<ProfitDto> getUsersProfitAmount(String scope) {
+    public List<ProfitDTO> getUsersProfitAmount(String scope) {
         return userDao.queryUsersProfitAmount(scope);
     }
 
     @Override
-    public void modifyUserHkAssetsBatch(List<ProfitDto> usersProfit) {
+    public void modifyUserHkAssetsBatch(List<ProfitDTO> usersProfit) {
         userDao.updateUserHkAssetsBatch(usersProfit);
     }
 
     @Override
-    public void modifyUserUsAssetsBatch(List<ProfitDto> usersProfit) {
+    public void modifyUserUsAssetsBatch(List<ProfitDTO> usersProfit) {
         userDao.updateUserUsAssetsBatch(usersProfit);
     }
 

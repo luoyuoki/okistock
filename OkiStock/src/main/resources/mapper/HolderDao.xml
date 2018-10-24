@@ -6,7 +6,7 @@
 
     <insert id="insertStockHolder" useGeneratedKeys="true" keyProperty="holderId" keyColumn="holder_id"
             parameterType="com.oki.stock.entity.Holder">
-        INSERT INTO stock_holder(openid,stock_id,stock_scope,cost_price,stock_nums,profit_amount,profit_percent,update_time) VALUES(#{openid},#{stockId},#{stockScope},#{costPrice},#{stockNums},#{profitAmount},#{profitPercent},#{updateTime})
+        INSERT INTO stock_holder(openid,stock_id,stock_scope,cost_price,stock_nums,profit_amount,profit_percent) VALUES(#{openid},#{stockId},#{stockScope},#{costPrice},#{stockNums},#{profitAmount},#{profitPercent})
     </insert>
 
     <update id="updateStockHolder" parameterType="com.oki.stock.entity.Holder">
@@ -23,9 +23,6 @@
             </if>
             <if test="profitPercent!=null">
                 profit_percent=#{profitPercent},
-            </if>
-            <if test="updateTime!=null">
-                update_time=#{updateTime}
             </if>
         </set>
         WHERE holder_id=#{holderId}

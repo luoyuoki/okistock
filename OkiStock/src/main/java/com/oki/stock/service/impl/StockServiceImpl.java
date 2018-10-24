@@ -1,7 +1,7 @@
 package com.oki.stock.service.impl;
 
 import com.oki.stock.dao.StockDao;
-import com.oki.stock.dto.StockDto;
+import com.oki.stock.dto.StockDTO;
 import com.oki.stock.entity.Stock;
 import com.oki.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +17,26 @@ public class StockServiceImpl implements StockService {
     private StockDao stockDao;
 
     @Override
-    public List<StockDto> getHkStocks() {
+    public List<StockDTO> getHkStocks() {
         List<Stock> stockList = stockDao.queryHkStocks();
-        List<StockDto> sdList = getStockList(stockList);
+        List<StockDTO> sdList = getStockList(stockList);
         if (sdList != null) return sdList;
         return null;
     }
 
     @Override
-    public List<StockDto> getUsStocks() {
+    public List<StockDTO> getUsStocks() {
         List<Stock> stockList = stockDao.queryUsStocks();
-        List<StockDto> sdList = getStockList(stockList);
+        List<StockDTO> sdList = getStockList(stockList);
         if (sdList != null) return sdList;
         return null;
     }
 
-    private List<StockDto> getStockList(List<Stock> stockList) {
+    private List<StockDTO> getStockList(List<Stock> stockList) {
         if (stockList != null && stockList.size() > 0) {
-            List<StockDto> sdList = new ArrayList<>();
+            List<StockDTO> sdList = new ArrayList<>();
             for (Stock stock : stockList) {
-                StockDto sd = new StockDto();
+                StockDTO sd = new StockDTO();
                 sd.setStockId(stock.getStockId());
                 sd.setStockName(stock.getStockName());
                 sd.setCurrentPrice(stock.getCurrentPrice());
@@ -71,7 +71,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public StockDto getStock(Integer stockId) {
+    public StockDTO getStock(Integer stockId) {
         return stockDao.queryStock(stockId);
     }
 

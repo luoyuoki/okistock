@@ -1,14 +1,10 @@
 package com.oki.stock.dto;
 
-public class UsRankDto extends RankDto {
+import lombok.Getter;
+
+@Getter
+public class UsRankDTO extends RankDTO {
 
     private String usProfitPercent;
 
-    public String getUsProfitPercent() {
-        return usProfitPercent;
-    }
-
-    public void setUsProfitPercent(String usProfitPercent) {
-        this.usProfitPercent = usProfitPercent;
-    }
 }

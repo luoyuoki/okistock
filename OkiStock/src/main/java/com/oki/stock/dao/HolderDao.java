@@ -1,6 +1,6 @@
 package com.oki.stock.dao;
 
-import com.oki.stock.dto.HolderParam;
+import com.oki.stock.dto.HolderParamDTO;
 import com.oki.stock.entity.Holder;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +15,10 @@ public interface HolderDao {
 
     List<Holder> queryUserHolderByStockName(String stockName);
 
-    Holder queryUserHolder(HolderParam holderParam);
+    Holder queryUserHolder(HolderParamDTO holderParamDTO);
 
     int updateStockHolder(Holder holder);
 
     int deleteStockHolder(Integer holderId);
+
 }

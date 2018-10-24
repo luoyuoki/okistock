@@ -1,8 +1,8 @@
 package com.oki.stock.service.impl;
 
 import com.oki.stock.dao.RankDao;
-import com.oki.stock.dto.HkRankDto;
-import com.oki.stock.dto.UsRankDto;
+import com.oki.stock.dto.HkRankDTO;
+import com.oki.stock.dto.UsRankDTO;
 import com.oki.stock.service.RankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +16,9 @@ public class RankServiceImpl implements RankService {
     private RankDao rankDao;
 
     @Override
-    public List<HkRankDto> getHkRankList() {
-        List<HkRankDto> rankList = rankDao.queryHkRankList();
-        for (HkRankDto rank : rankList) {
+    public List<HkRankDTO> getHkRankList() {
+        List<HkRankDTO> rankList = rankDao.queryHkRankList();
+        for (HkRankDTO rank : rankList) {
             if (rank.getHkProfitPercent().startsWith("+")) {
                 rank.setRise(true);
             } else {
@@ -29,9 +29,9 @@ public class RankServiceImpl implements RankService {
     }
 
     @Override
-    public List<UsRankDto> getUsRankList() {
-        List<UsRankDto> rankList = rankDao.queryUsRankList();
-        for (UsRankDto rank : rankList) {
+    public List<UsRankDTO> getUsRankList() {
+        List<UsRankDTO> rankList = rankDao.queryUsRankList();
+        for (UsRankDTO rank : rankList) {
             if (rank.getUsProfitPercent().startsWith("+")) {
                 rank.setRise(true);
             } else {

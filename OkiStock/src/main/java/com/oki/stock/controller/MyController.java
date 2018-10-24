@@ -1,18 +1,19 @@
 package com.oki.stock.controller;
 
-import com.oki.stock.dto.HolderDto;
-import com.oki.stock.dto.NewOrderDto;
-import com.oki.stock.dto.SuccessOrderDto;
-import com.oki.stock.dto.UserDto;
+import com.oki.stock.common.CodeMsg;
+import com.oki.stock.common.RespResult;
+import com.oki.stock.common.TradingFlag;
+import com.oki.stock.dto.*;
 import com.oki.stock.entity.*;
 import com.oki.stock.service.*;
 import com.oki.stock.util.SpringContextUtil;
+import com.oki.stock.vo.MyMainInfoVO;
+import com.oki.stock.vo.NewOrderVO;
+import com.oki.stock.vo.NotificationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/my")
@@ -31,76 +32,58 @@ public class MyController {
     private NotificationService notificationService;
 
     @GetMapping("/main")
-    public Map<String, Object> getMyMainInfo(String openid) {
-        Map<String, Object> modelMap = new HashMap<>();
-        UserDto user = userService.getUserInfoByOpenid(openid);
+    public RespResult getMyMainInfo(String openid) {
+        UserDTO user = userService.getUserInfoByOpenid(openid);
         if (user != null) {
-            modelMap.put("success", true);
-            modelMap.put("user", user);
+            MyMainInfoVO infoVO = new MyMainInfoVO();
+            infoVO.setUser(user);
 
+            List<HolderDTO> holderList = holderService.getUserHoldersByOpenid(openid);
+            infoVO.setHolderList(holderList);
+
+            Notification notification = notificationService.getLastNotification();
+            if (notification != null) {
+                NotificationVO notificationVO = new NotificationVO();
+                notificationVO.setTitle(notification.getTitle());
+                notificationVO.setMessage(notification.getMessage());
+            }
+            infoVO.setNotification(notification);
+
+            infoVO.setTradingFlag(SpringContextUtil.getBean(TradingFlag.class));
+            return RespResult.bySuccess(infoVO);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError(CodeMsg.USER_NOT_EXIST);
         }
-        return modelMap;
-    }
-
-    @GetMapping("/hold")
-    public Map<String, Object> getHolderList(String openid) {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<HolderDto> holderList = holderService.getUserHoldersByOpenid(openid);
-        if (holderList != null) {
-            modelMap.put("success", true);
-            modelMap.put("stockHolderList", holderList);
-
-            TradingFlag tradingFlag = SpringContextUtil.getBean(TradingFlag.class);
-            modelMap.put("hkTrading", tradingFlag.getHkTrading());
-            modelMap.put("usTrading", tradingFlag.getUsTrading());
-        } else {
-            modelMap.put("success", false);
-        }
-        return modelMap;
     }
 
     @GetMapping("/new")
-    public Map<String, Object> getNewOrderList(String openid, Boolean needUpdateAssets) {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<NewOrderDto> orderList = orderService.getNewOrdersByUser(openid);
+    public RespResult getNewOrderList(String openid, Boolean needUpdateAssets) {
+        List<NewOrderDTO> orderList = orderService.getNewOrdersByUser(openid);
         if (orderList != null) {
-            modelMap.put("success", true);
-            modelMap.put("newOrderList", orderList);
+            NewOrderVO orderVO = new NewOrderVO();
+            orderVO.setNewOrderList(orderList);
 
             if (needUpdateAssets) {
-                UserDto ud = userService.getUserInfoByOpenid(openid);
-                modelMap.put("hkRestDollar", ud.getHkRestDollar());
-                modelMap.put("hkFrozenCapital", ud.getHkFrozenCapital());
-                modelMap.put("usRestDollar", ud.getUsRestDollar());
-                modelMap.put("usFrozenCapital", ud.getUsFrozenCapital());
+                UserDTO ud = userService.getUserInfoByOpenid(openid);
+                orderVO.setHkRestDollar(ud.getHkRestDollar());
+                orderVO.setHkFrozenCapital(ud.getHkFrozenCapital());
+                orderVO.setUsRestDollar(ud.getUsRestDollar());
+                orderVO.setUsFrozenCapital(ud.getUsFrozenCapital());
             }
+            return RespResult.bySuccess(orderVO);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
     }
 
     @GetMapping("/success")
-    public Map<String, Object> getSuccessOrderList(String openid) {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<SuccessOrderDto> orderList = orderService.getSuccessOrdersByUser(openid);
+    public RespResult getSuccessOrderList(String openid) {
+        List<SuccessOrderDTO> orderList = orderService.getSuccessOrdersByUser(openid);
         if (orderList != null) {
-            modelMap.put("success", true);
-            modelMap.put("successOrderList", orderList);
+            return RespResult.bySuccess(orderList);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
-    }
-
-    @GetMapping("/notifier")
-    public Map<String, Object> getLastNotification() {
-        Map<String, Object> modelMap = new HashMap<>();
-        Notification notification = notificationService.getLastNotification();
-        modelMap.put("notification", notification);
-        return modelMap;
     }
 
 }

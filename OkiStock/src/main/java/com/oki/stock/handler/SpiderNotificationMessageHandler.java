@@ -1,13 +1,12 @@
 package com.oki.stock.handler;
 
 import com.google.gson.Gson;
-import com.oki.stock.dto.ProfitDto;
-import com.oki.stock.entity.TradingFlag;
+import com.oki.stock.dto.ProfitDTO;
+import com.oki.stock.common.TradingFlag;
 import com.oki.stock.service.OrderService;
 import com.oki.stock.service.UserService;
 import com.oki.stock.util.SpringContextUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -24,7 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class SpiderNotificationMessageReceiver {
+@Slf4j
+public class SpiderNotificationMessageHandler {
 
     @Autowired
     private UserService userService;
@@ -41,11 +41,9 @@ public class SpiderNotificationMessageReceiver {
     @Value("${user.assets.us}")
     private String usAssets;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     public void handleMessage(String message) {
         if (!StringUtils.isEmpty(message)) {
-            logger.info(message);
+            log.info(message);
             Gson gson = new Gson();
             Map<String, String> msgMap = new HashMap<>();
             msgMap = gson.fromJson(message, msgMap.getClass());
@@ -55,9 +53,9 @@ public class SpiderNotificationMessageReceiver {
             switch (action) {
                 case "stop":
 
-                    List<ProfitDto> usersProfit = userService.getUsersProfitAmount(scope);
+                    List<ProfitDTO> usersProfit = userService.getUsersProfitAmount(scope);
                     if (usersProfit != null && usersProfit.size() > 0) {
-                        for (ProfitDto userProfit : usersProfit) {
+                        for (ProfitDTO userProfit : usersProfit) {
                             BigDecimal profitAmount = userProfit.getProfitAmount();
 
                             BigDecimal originalAssets = null;
@@ -89,8 +87,10 @@ public class SpiderNotificationMessageReceiver {
                     TradingFlag tradingFlag = SpringContextUtil.getBean(TradingFlag.class);
 
                     if (scope.equals("hk")) {
+                        log.info("hk start...");
                         tradingFlag.setHkTrading(true);
                     } else if (scope.equals("us")) {
+                        log.info("us start...");
                         tradingFlag.setUsTrading(true);
                     }
 
@@ -101,8 +101,10 @@ public class SpiderNotificationMessageReceiver {
                     TradingFlag tradingFlag = SpringContextUtil.getBean(TradingFlag.class);
 
                     if (scope.equals("hk")) {
+                        log.info("hk finish...");
                         tradingFlag.setHkTrading(false);
                     } else if (scope.equals("us")) {
+                        log.info("us finish...");
                         tradingFlag.setUsTrading(false);
                     }
                     orderService.modifyOrderStatusToFail();
@@ -114,11 +116,9 @@ public class SpiderNotificationMessageReceiver {
     }
 
     private void flushRedis() {
-        redisTemplate.execute(new RedisCallback<Object>() {
-            public String doInRedis(RedisConnection connection) throws DataAccessException {
-                connection.flushDb();
-                return "ok";
-            }
+        redisTemplate.execute((RedisCallback<Object>) connection -> {
+            connection.flushDb();
+            return "ok";
         });
     }
 }

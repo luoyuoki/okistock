@@ -1,7 +1,7 @@
 package com.oki.stock.service;
 
-import com.oki.stock.dto.HolderDto;
-import com.oki.stock.dto.HolderParam;
+import com.oki.stock.dto.HolderDTO;
+import com.oki.stock.dto.HolderParamDTO;
 import com.oki.stock.entity.Holder;
 
 import java.util.List;
@@ -14,9 +14,10 @@ public interface HolderService {
 
     boolean dropStockHolder(Integer holderId);
 
-    List<HolderDto> getUserHoldersByOpenid(String openid);
+    List<HolderDTO> getUserHoldersByOpenid(String openid);
 
     List<Holder> getUserHoldersByStockName(String stockName);
 
-    Holder getUserHolder(HolderParam holderParam);
+    Holder getUserHolder(HolderParamDTO holderParamDTO);
+
 }

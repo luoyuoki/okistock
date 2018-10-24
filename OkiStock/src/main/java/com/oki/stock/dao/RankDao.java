@@ -1,7 +1,7 @@
 package com.oki.stock.dao;
 
-import com.oki.stock.dto.HkRankDto;
-import com.oki.stock.dto.UsRankDto;
+import com.oki.stock.dto.HkRankDTO;
+import com.oki.stock.dto.UsRankDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface RankDao {
 
-    List<HkRankDto> queryHkRankList();
+    List<HkRankDTO> queryHkRankList();
 
-    List<UsRankDto> queryUsRankList();
+    List<UsRankDTO> queryUsRankList();
 }

@@ -1,6 +1,6 @@
 package com.oki.stock.dao;
 
-import com.oki.stock.dto.StockDto;
+import com.oki.stock.dto.StockDTO;
 import com.oki.stock.entity.Stock;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ public interface StockDao {
 
     Stock queryStockById(Integer stockId);
 
-    StockDto queryStock(Integer stockId);
+    StockDTO queryStock(Integer stockId);
 
     List<Stock> queryUsStocks();
 }

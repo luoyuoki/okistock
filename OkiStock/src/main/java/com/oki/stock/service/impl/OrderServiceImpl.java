@@ -1,14 +1,17 @@
 package com.oki.stock.service.impl;
 
+import com.oki.stock.common.CodeMsg;
+import com.oki.stock.common.OrderStatus;
 import com.oki.stock.dao.OrderDao;
-import com.oki.stock.dto.NewOrderDto;
-import com.oki.stock.dto.SuccessOrderDto;
+import com.oki.stock.dto.NewOrderDTO;
+import com.oki.stock.dto.SuccessOrderDTO;
 import com.oki.stock.entity.Order;
+import com.oki.stock.exception.StockServerException;
 import com.oki.stock.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,58 +20,44 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDao orderDao;
 
+    @Override
     @Transactional
-    @Override
     public boolean addOrder(Order order) {
-        if (!StringUtils.isEmpty(order.getOpenid())) {
-            order.setOrderStatus("0");
-            order.setCommitTime(new Date());
-            try {
-                int effectedNums = orderDao.insertOrder(order);
-                if (effectedNums > 0) {
-                    return true;
-                } else {
-                    throw new RuntimeException("下单失败");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("下单失败：" + e.getMessage());
-            }
+        order.setOrderStatus(OrderStatus.TRADE_WAIT.getStatus());
+        order.setCommitTime(new Date());
+        int effectedNums = orderDao.insertOrder(order);
+        if (effectedNums > 0) {
+            return true;
         } else {
-            throw new RuntimeException("下单失败openid为空");
+            throw new StockServerException(CodeMsg.ADD_ORDER_ERROR);
         }
     }
 
     @Override
+    @Transactional
     public boolean modifyOrder(Order order) {
-        if (order.getOrderId() > 0) {
-            try {
-                int effectedNums = orderDao.updateOrder(order);
-                if (effectedNums > 0) {
-                    return true;
-                } else {
-                    throw new RuntimeException("更新订单失败");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("更新订单失败：" + e.getMessage());
-            }
+        int effectedNums = orderDao.updateOrder(order);
+        if (effectedNums > 0) {
+            return true;
         } else {
-            throw new RuntimeException("订单ID不能为空");
+            throw new StockServerException(CodeMsg.MODIFY_ORDER_ERROR);
         }
     }
 
     @Override
-    public List<NewOrderDto> getNewOrdersByUser(String openid) {
+    public List<NewOrderDTO> getNewOrdersByUser(String openid) {
         List<Order> orders = orderDao.queryNewOrders(openid);
         if (orders != null) {
-            List<NewOrderDto> noList = new ArrayList<>();
+            List<NewOrderDTO> noList = new ArrayList<>();
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
             for (Order order : orders) {
-                NewOrderDto no = new NewOrderDto();
+                NewOrderDTO no = new NewOrderDTO();
                 no.setOrderId(order.getOrderId());
                 no.setStockName(order.getStockName());
                 no.setQuotePrice(order.getQuotePrice());
@@ -84,12 +73,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<SuccessOrderDto> getSuccessOrdersByUser(String openid) {
+    public List<SuccessOrderDTO> getSuccessOrdersByUser(String openid) {
         List<Order> orders = orderDao.querySuccessOrders(openid);
         if (orders != null) {
-            List<SuccessOrderDto> soList = new ArrayList<>();
+            List<SuccessOrderDTO> soList = new ArrayList<>();
             for (Order order : orders) {
-                SuccessOrderDto so = new SuccessOrderDto();
+                SuccessOrderDTO so = new SuccessOrderDTO();
                 so.setOrderId(order.getOrderId());
                 so.setOrderType(order.getOrderType());
                 so.setStockName(order.getStockName());
@@ -108,7 +97,8 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderDao.updateOrderStatusToFail();
         } catch (Exception e) {
-            throw new RuntimeException("更新过期订单失败：" + e.getMessage());
+            log.error(e.toString());
+            throw new StockServerException(CodeMsg.MODIFY_EXPIRED_ORDER_ERROR);
         }
         return true;
     }
@@ -118,7 +108,8 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderDao.deleteOrderByFail();
         } catch (Exception e) {
-            throw new RuntimeException("删除过期订单失败：" + e.getMessage());
+            log.error(e.toString());
+            throw new StockServerException(CodeMsg.DROP_EXPIRED_ORDER_ERROR);
         }
         return true;
     }

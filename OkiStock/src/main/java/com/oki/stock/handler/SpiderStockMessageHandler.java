@@ -4,8 +4,7 @@ import com.google.gson.Gson;
 import com.oki.stock.entity.Holder;
 import com.oki.stock.service.HolderService;
 import com.oki.stock.util.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -16,16 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class SpiderStockMessageReceiver {
+@Slf4j
+public class SpiderStockMessageHandler {
 
     @Autowired
     private HolderService holderService;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     public void handleMessage(String message) {
         if (!StringUtils.isEmpty(message)) {
-            logger.info(message);
+            log.info(message);
             Gson gson = new Gson();
             Map<String, String> msgMap = new HashMap<>();
             msgMap = gson.fromJson(message, msgMap.getClass());

@@ -1,8 +1,8 @@
 package com.oki.stock.config;
 
-import com.oki.stock.handler.SpiderExchangeMessageReceiver;
-import com.oki.stock.handler.SpiderNotificationMessageReceiver;
-import com.oki.stock.handler.SpiderStockMessageReceiver;
+import com.oki.stock.handler.SpiderExchangeMessageHandler;
+import com.oki.stock.handler.SpiderNotificationMessageHandler;
+import com.oki.stock.handler.SpiderStockMessageHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -28,17 +28,17 @@ public class MyRedisConfiguration {
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapterExchange(SpiderExchangeMessageReceiver receiver) {
+    MessageListenerAdapter listenerAdapterExchange(SpiderExchangeMessageHandler receiver) {
         return new MessageListenerAdapter(receiver);
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapterStock(SpiderStockMessageReceiver receiver) {
+    MessageListenerAdapter listenerAdapterStock(SpiderStockMessageHandler receiver) {
         return new MessageListenerAdapter(receiver);
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapterNotification(SpiderNotificationMessageReceiver receiver){
+    MessageListenerAdapter listenerAdapterNotification(SpiderNotificationMessageHandler receiver){
         return new MessageListenerAdapter(receiver);
     }
 

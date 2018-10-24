@@ -1,7 +1,7 @@
 package com.oki.stock.service;
 
-import com.oki.stock.dto.ProfitDto;
-import com.oki.stock.dto.UserDto;
+import com.oki.stock.dto.ProfitDTO;
+import com.oki.stock.dto.UserDTO;
 import com.oki.stock.entity.User;
 
 import java.util.List;
@@ -12,13 +12,13 @@ public interface UserService {
 
     User getUserByOpenid(String openid);
 
-    UserDto getUserInfoByOpenid(String openid);
+    UserDTO getUserInfoByOpenid(String openid);
 
     boolean modifyUserAssets(User user);
 
-    List<ProfitDto> getUsersProfitAmount(String scope);
+    List<ProfitDTO> getUsersProfitAmount(String scope);
 
-    void modifyUserHkAssetsBatch(List<ProfitDto> usersProfit);
+    void modifyUserHkAssetsBatch(List<ProfitDTO> usersProfit);
 
-    void modifyUserUsAssetsBatch(List<ProfitDto> usersProfit);
+    void modifyUserUsAssetsBatch(List<ProfitDTO> usersProfit);
 }

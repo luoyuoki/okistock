@@ -17,7 +17,7 @@
         SELECT * FROM oki_stock WHERE stock_id=#{stockId}
     </select>
 
-    <select id="queryStock" resultType="com.oki.stock.dto.StockDto">
+    <select id="queryStock" resultType="com.oki.stock.dto.StockDTO">
         SELECT stock_name,current_price,stock_scope FROM oki_stock WHERE stock_id=#{stockId}
     </select>
 

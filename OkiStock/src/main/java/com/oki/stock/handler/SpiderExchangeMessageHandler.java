@@ -1,8 +1,10 @@
 package com.oki.stock.handler;
 
 import com.google.gson.Gson;
-import com.oki.stock.dto.HolderParam;
-import com.oki.stock.dto.StockDto;
+import com.oki.stock.common.OrderStatus;
+import com.oki.stock.common.OrderType;
+import com.oki.stock.dto.HolderParamDTO;
+import com.oki.stock.dto.StockDTO;
 import com.oki.stock.entity.Holder;
 import com.oki.stock.entity.Order;
 import com.oki.stock.entity.User;
@@ -11,8 +13,7 @@ import com.oki.stock.service.OrderService;
 import com.oki.stock.service.StockService;
 import com.oki.stock.service.UserService;
 import com.oki.stock.util.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class SpiderExchangeMessageReceiver {
+@Slf4j
+public class SpiderExchangeMessageHandler {
 
     @Autowired
     private OrderService orderService;
@@ -42,11 +44,9 @@ public class SpiderExchangeMessageReceiver {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     public void handleMessage(String message) {
         if (!StringUtils.isEmpty(message)) {
-            logger.info(message);
+            log.info(message);
             Gson gson = new Gson();
             Map<String, String> msgMap = new HashMap<>();
             msgMap = gson.fromJson(message, msgMap.getClass());
@@ -67,7 +67,7 @@ public class SpiderExchangeMessageReceiver {
 
             Order order = new Order();
             order.setOrderId(Integer.parseInt(orderId));
-            order.setOrderStatus("1");
+            order.setOrderStatus(OrderStatus.TRADE_SUCCESS.getStatus());
             order.setExchangePrice(lastPrice);
             order.setExchangeTime(time);
 
@@ -79,28 +79,28 @@ public class SpiderExchangeMessageReceiver {
 
                 User user = userService.getUserByOpenid(openid);
 
-                HolderParam holderParam = new HolderParam();
-                holderParam.setOpenid(openid);
-                holderParam.setStockId(stockId);
+                HolderParamDTO holderParamDTO = new HolderParamDTO();
+                holderParamDTO.setOpenid(openid);
+                holderParamDTO.setStockId(stockId);
 
-                Holder holder = holderService.getUserHolder(holderParam);
+                Holder holder = holderService.getUserHolder(holderParamDTO);
                 if (holder != null && holder.getHolderId() > 0) {
 
                     BigDecimal originalNums = new BigDecimal(holder.getStockNums());
                     BigDecimal originalPrice = holder.getCostPrice();
 
-                    StockDto stockDto = stockService.getStock(stockId);
+                    StockDTO stockDto = stockService.getStock(stockId);
                     BigDecimal currentPrice = new BigDecimal(stockDto.getCurrentPrice());
 
                     BigDecimal lastNums = null;
                     BigDecimal costPrice = null;
 
-                    if (orderType.equals("0")) {
+                    if (orderType.equals(OrderType.BUY.getType())) {
 
                         lastNums = new BigDecimal(quoteNums).add(originalNums);
                         costPrice = Utils.calcCostTotalPrice(originalPrice, originalNums).add(lastPrice.multiply(new BigDecimal(quoteNums))).divide(lastNums, 2, RoundingMode.HALF_UP);
 
-                    } else if (orderType.equals("1")) {
+                    } else if (orderType.equals(OrderType.SELL.getType())) {
 
                         lastNums = originalNums.subtract(new BigDecimal(quoteNums));
                         if (lastNums.signum() < 0)
@@ -138,10 +138,10 @@ public class SpiderExchangeMessageReceiver {
                         lastNums = new BigDecimal(quoteNums);
                         costPrice = Utils.calcCostTotalPrice(lastPrice, lastNums);
 
-                        if (orderType.equals("0")) {
+                        if (orderType.equals(OrderType.BUY.getType())) {
                             BigDecimal orderPrice = new BigDecimal(quotePrice).multiply(lastNums);
                             processRestDollar4Buy(stockScope, user, costPrice, orderPrice);
-                        } else if (orderType.equals("1")) {
+                        } else if (orderType.equals(OrderType.SELL.getType())) {
 
                             processRestDollar4Sell(stockScope, user, costPrice);
                         }

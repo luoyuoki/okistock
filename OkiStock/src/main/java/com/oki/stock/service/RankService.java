@@ -1,13 +1,13 @@
 package com.oki.stock.service;
 
-import com.oki.stock.dto.HkRankDto;
-import com.oki.stock.dto.UsRankDto;
+import com.oki.stock.dto.HkRankDTO;
+import com.oki.stock.dto.UsRankDTO;
 
 import java.util.List;
 
 public interface RankService {
 
-    List<HkRankDto> getHkRankList();
+    List<HkRankDTO> getHkRankList();
 
-    List<UsRankDto> getUsRankList();
+    List<UsRankDTO> getUsRankList();
 }

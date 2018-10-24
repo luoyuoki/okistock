@@ -1,22 +1,28 @@
 package com.oki.stock.controller;
 
-import com.oki.stock.dto.HolderParam;
-import com.oki.stock.dto.StockDto;
-import com.oki.stock.entity.*;
+import com.oki.stock.common.CodeMsg;
+import com.oki.stock.common.RespResult;
+import com.oki.stock.common.TradingFlag;
+import com.oki.stock.dto.HolderParamDTO;
+import com.oki.stock.dto.StockDTO;
+import com.oki.stock.entity.Holder;
+import com.oki.stock.entity.Order;
+import com.oki.stock.entity.Stock;
+import com.oki.stock.entity.User;
+import com.oki.stock.exception.StockServerException;
+import com.oki.stock.rabbitmq.MQOrderSender;
 import com.oki.stock.service.HolderService;
-import com.oki.stock.service.OrderService;
 import com.oki.stock.service.StockService;
 import com.oki.stock.service.UserService;
 import com.oki.stock.util.SpringContextUtil;
-import com.oki.stock.util.Utils;
+import com.oki.stock.vo.StockDetailVO;
+import com.oki.stock.vo.StockVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/stock")
@@ -26,65 +32,54 @@ public class StockMainController {
     private StockService stockService;
 
     @Autowired
-    private OrderService orderService;
-
-    @Autowired
     private HolderService holderService;
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private MQOrderSender mqOrderSender;
 
     @GetMapping("/hk")
-    public Map<String, Object> getHkStockList() {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<StockDto> stockList = stockService.getHkStocks();
+    public RespResult getHkStockList() {
+        List<StockDTO> stockList = stockService.getHkStocks();
         if (stockList != null) {
-            modelMap.put("success", true);
-            modelMap.put("stockList", stockList);
-
-            TradingFlag tradingFlag = SpringContextUtil.getBean(TradingFlag.class);
-            modelMap.put("trading", tradingFlag.getHkTrading());
+            StockVO stockVO = new StockVO();
+            stockVO.setStockList(stockList);
+            stockVO.setTrading(SpringContextUtil.getBean(TradingFlag.class).getHkTrading());
+            return RespResult.bySuccess(stockVO);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
     }
 
     @GetMapping("/us")
-    public Map<String, Object> getUsStockList() {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<StockDto> stockList = stockService.getUsStocks();
+    public RespResult getUsStockList() {
+        List<StockDTO> stockList = stockService.getUsStocks();
         if (stockList != null) {
-            modelMap.put("success", true);
-            modelMap.put("stockList", stockList);
-
-            TradingFlag tradingFlag = SpringContextUtil.getBean(TradingFlag.class);
-            modelMap.put("trading", tradingFlag.getUsTrading());
+            StockVO stockVO = new StockVO();
+            stockVO.setStockList(stockList);
+            stockVO.setTrading(SpringContextUtil.getBean(TradingFlag.class).getUsTrading());
+            return RespResult.bySuccess(stockVO);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
     }
 
-    @GetMapping(value = "/get")
-    public Map<String, Object> getStockById(@RequestParam("stockId") Integer stockId, @RequestParam("openid") String openid) {
-        Map<String, Object> modelMap = new HashMap<>();
+    @GetMapping(value = "/detail")
+    public RespResult getStockDetail(@RequestParam("stockId") Integer stockId, @RequestParam("openid") String openid) {
         Stock stock = stockService.getStockById(stockId);
-
-        HolderParam holderParam = new HolderParam();
-        holderParam.setOpenid(openid);
-        holderParam.setStockId(stockId);
-        Holder holder = holderService.getUserHolder(holderParam);
-        Integer mostSell = 0;
-        Integer mostBuy = 0;
-        if (holder != null) {
-            mostSell = holder.getStockNums();
-        }
-
         if (stock != null) {
+            HolderParamDTO holderParamDTO = new HolderParamDTO();
+            holderParamDTO.setOpenid(openid);
+            holderParamDTO.setStockId(stockId);
+            Integer mostSell = 0;
+            Integer mostBuy = 0;
+            Holder holder = holderService.getUserHolder(holderParamDTO);
+            if (holder != null) {
+                mostSell = holder.getStockNums();
+            }
+
             String stockScope = stock.getStockScope();
             BigDecimal roundNums = new BigDecimal(stock.getRoundNums());
             User user = userService.getUserByOpenid(openid);
@@ -97,61 +92,26 @@ public class StockMainController {
                 mostBuy = usRest.divideToIntegralValue(stockPrice).intValue();
             }
 
-            modelMap.put("success", true);
-            modelMap.put("stock", stock);
-            modelMap.put("mostSell", mostSell);
-            modelMap.put("mostBuy", mostBuy);
+            StockDetailVO detailVO = new StockDetailVO();
+            detailVO.setStock(stock);
+            detailVO.setMostBuy(mostBuy);
+            detailVO.setMostSell(mostSell);
+
+            return RespResult.bySuccess(detailVO);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
+
     }
 
     @PostMapping(value = "/order")
-    public Map<String, Object> addNewOrder(@RequestBody Order order) {
-        Map<String, Object> modelMap = new HashMap<>();
-
-        if (orderService.addOrder(order)) {
-            Map<String, String> redisMap = new HashMap<>();
-            Integer orderId = order.getOrderId();
-            String quotePrice = order.getQuotePrice();
-            Integer quoteNums = order.getQuoteNums();
-            String stockScope = order.getStockScope();
-            String openid = order.getOpenid();
-            String orderType = order.getOrderType();
-            redisMap.put("order_id", String.valueOf(orderId));
-            redisMap.put("quote_price", quotePrice);
-            redisMap.put("quote_nums", String.valueOf(quoteNums));
-            redisMap.put("order_type", orderType);
-            redisMap.put("stock_scope", stockScope);
-            redisMap.put("commit_time", String.valueOf(order.getCommitTime().getTime() / 1000));
-            redisMap.put("stock_id", String.valueOf(order.getStockId()));
-            redisMap.put("openid", openid);
-            redisTemplate.opsForHash().putAll(order.getStockName() + ":" + orderId, redisMap);
-
-            if (orderType.equals("0")) {
-                BigDecimal costTotalPrice = Utils.calcCostTotalPrice(new BigDecimal(quotePrice), new BigDecimal(quoteNums));
-                User user = userService.getUserByOpenid(openid);
-                if (stockScope.equals("hk")) {
-                    user.setHkFrozenCapital(user.getHkFrozenCapital().add(costTotalPrice));
-                    user.setHkRestDollar(user.getHkRestDollar().subtract(costTotalPrice));
-                } else if (stockScope.equals("us")) {
-                    user.setUsFrozenCapital(user.getUsFrozenCapital().add(costTotalPrice));
-                    user.setUsRestDollar(user.getUsRestDollar().subtract(costTotalPrice));
-                }
-                if (userService.modifyUserAssets(user)) {
-                    modelMap.put("success", true);
-                } else {
-                    modelMap.put("success", false);
-                }
-            } else {
-                modelMap.put("success", true);
-            }
-        } else {
-            modelMap.put("success", false);
+    public RespResult addNewOrder(@RequestBody Order order) {
+        if (order == null || StringUtils.isEmpty(order.getOpenid())) {
+            throw new StockServerException(CodeMsg.ADD_ORDER_INFO_EMPTY);
         }
 
-        return modelMap;
+        mqOrderSender.send(order);
+        return RespResult.bySuccess();
     }
 
 }

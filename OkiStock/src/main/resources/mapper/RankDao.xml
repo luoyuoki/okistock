@@ -5,11 +5,11 @@
 <mapper namespace="com.oki.stock.dao.RankDao">
 
 
-    <select id="queryHkRankList" resultType="com.oki.stock.dto.HkRankDto">
+    <select id="queryHkRankList" resultType="com.oki.stock.dto.HkRankDTO">
         SELECT nick_name,avatar_url,hk_profit_percent FROM oki_user ORDER BY hk_assets DESC LIMIT 50;
     </select>
 
-    <select id="queryUsRankList" resultType="com.oki.stock.dto.UsRankDto">
+    <select id="queryUsRankList" resultType="com.oki.stock.dto.UsRankDTO">
         SELECT nick_name,avatar_url,us_profit_percent FROM oki_user ORDER BY us_assets DESC LIMIT 50;
     </select>
 </mapper>

@@ -7,7 +7,7 @@
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id"
             parameterType="com.oki.stock.entity.User">
         INSERT INTO oki_user(openid,nick_name,avatar_url,hk_assets,hk_rest_dollar,hk_profit_amount,hk_profit_percent,hk_frozen_capital,us_assets,us_rest_dollar,
-        us_profit_amount,us_profit_percent,us_frozen_capital,update_time) VALUES(#{openid},#{nickName},#{avatarUrl},#{hkAssets},#{hkRestDollar},#{hkProfitAmount},#{hkProfitPercent},#{hkFrozenCapital},#{usAssets},#{usRestDollar},#{usProfitAmount},#{usProfitPercent},#{usFrozenCapital},#{updateTime})
+        us_profit_amount,us_profit_percent,us_frozen_capital) VALUES(#{openid},#{nickName},#{avatarUrl},#{hkAssets},#{hkRestDollar},#{hkProfitAmount},#{hkProfitPercent},#{hkFrozenCapital},#{usAssets},#{usRestDollar},#{usProfitAmount},#{usProfitPercent},#{usFrozenCapital})
     </insert>
 
     <update id="updateUserAssets" parameterType="com.oki.stock.entity.User">
@@ -43,18 +43,15 @@
             <if test="usFrozenCapital!=null">
                 us_frozen_capital=#{usFrozenCapital},
             </if>
-            <if test="updateTime!=null">
-                update_time=#{updateTime}
-            </if>
         </set>
         WHERE user_id=#{userId}
     </update>
 
     <select id="queryUserByOpenid" resultType="com.oki.stock.entity.User">
-        SELECT * FROM oki_user WHERE openid=#{openid}
+        SELECT user_id,openid,nick_name,avatar_url,hk_assets,hk_rest_dollar,hk_profit_amount,hk_profit_percent,hk_frozen_capital,us_assets,us_rest_dollar,us_profit_amount,us_profit_percent,us_frozen_capital FROM oki_user WHERE openid=#{openid}
     </select>
 
-    <select id="queryUsersProfitAmount" resultType="com.oki.stock.dto.ProfitDto">
+    <select id="queryUsersProfitAmount" resultType="com.oki.stock.dto.ProfitDTO">
         SELECT s.openid,sum(s.profit_amount) profit_amount FROM stock_holder s JOIN oki_user o ON s.openid=o.openid WHERE s.stock_scope=#{scope} GROUP BY o.openid;
     </select>
 
@@ -71,7 +68,6 @@
                 <if test="item.profitPercent!=null">
                     hk_profit_percent='${item.profitPercent}',
                 </if>
-                update_time=now()
             </set>
             WHERE openid='${item.openid}'
         </foreach>
@@ -90,7 +86,6 @@
                 <if test="item.profitPercent!=null">
                     us_profit_percent='${item.profitPercent}',
                 </if>
-                update_time=now()
             </set>
             WHERE openid='${item.openid}'
         </foreach>>

@@ -1,6 +1,6 @@
 package com.oki.stock.dao;
 
-import com.oki.stock.dto.ProfitDto;
+import com.oki.stock.dto.ProfitDTO;
 import com.oki.stock.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +15,9 @@ public interface UserDao {
 
     int updateUserAssets(User user);
 
-    List<ProfitDto> queryUsersProfitAmount(String scope);
+    List<ProfitDTO> queryUsersProfitAmount(String scope);
 
-    void updateUserHkAssetsBatch(List<ProfitDto> usersProfit);
+    void updateUserHkAssetsBatch(List<ProfitDTO> usersProfit);
 
-    void updateUserUsAssetsBatch(List<ProfitDto> usersProfit);
+    void updateUserUsAssetsBatch(List<ProfitDTO> usersProfit);
 }

@@ -1,16 +1,15 @@
 package com.oki.stock.controller;
 
-import com.oki.stock.dto.HkRankDto;
-import com.oki.stock.dto.UsRankDto;
+import com.oki.stock.common.RespResult;
+import com.oki.stock.dto.HkRankDTO;
+import com.oki.stock.dto.UsRankDTO;
 import com.oki.stock.service.RankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/rank")
@@ -20,28 +19,22 @@ public class RankListController {
     private RankService rankService;
 
     @GetMapping("/hk")
-    public Map<String, Object> getHkRankList() {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<HkRankDto> rankList = rankService.getHkRankList();
+    public RespResult getHkRankList() {
+        List<HkRankDTO> rankList = rankService.getHkRankList();
         if (rankList != null) {
-            modelMap.put("success", true);
-            modelMap.put("hkRankList", rankList);
+            return RespResult.bySuccess(rankList);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
     }
 
     @GetMapping("/us")
-    public Map<String, Object> getUsRankList() {
-        Map<String, Object> modelMap = new HashMap<>();
-        List<UsRankDto> rankList = rankService.getUsRankList();
+    public RespResult getUsRankList() {
+        List<UsRankDTO> rankList = rankService.getUsRankList();
         if (rankList != null) {
-            modelMap.put("success", true);
-            modelMap.put("usRankList", rankList);
+            return RespResult.bySuccess(rankList);
         } else {
-            modelMap.put("success", false);
+            return RespResult.byError();
         }
-        return modelMap;
     }
 }
