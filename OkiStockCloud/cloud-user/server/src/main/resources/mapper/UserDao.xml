@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oki.stock.cloud.user.server.dao.UserDao">
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id"
+            parameterType="com.oki.stock.cloud.base.entity.User">
+        INSERT INTO oki_user(openid,nick_name,avatar_url,hk_assets,hk_rest_dollar,hk_profit_amount,hk_profit_percent,hk_frozen_capital,us_assets,us_rest_dollar,
+        us_profit_amount,us_profit_percent,us_frozen_capital) VALUES(#{openid},#{nickName},#{avatarUrl},#{hkAssets},#{hkRestDollar},#{hkProfitAmount},#{hkProfitPercent},#{hkFrozenCapital},#{usAssets},#{usRestDollar},#{usProfitAmount},#{usProfitPercent},#{usFrozenCapital})
+    </insert>
+
+    <update id="updateUserAssets" parameterType="com.oki.stock.cloud.base.entity.User">
+        UPDATE oki_user
+        <set>
+            <if test="hkAssets!=null">
+                hk_assets=#{hkAssets},
+            </if>
+            <if test="hkRestDollar!=null">
+                hk_rest_dollar=#{hkRestDollar},
+            </if>
+            <if test="hkProfitAmount!=null">
+                hk_profit_amount=#{hkProfitAmount},
+            </if>
+            <if test="hkProfitPercent!=null">
+                hk_profit_percent=#{hkProfitPercent},
+            </if>
+            <if test="hkFrozenCapital!=null">
+                hk_frozen_capital=#{hkFrozenCapital},
+            </if>
+            <if test="usAssets!=null">
+                us_assets=#{usAssets},
+            </if>
+            <if test="usRestDollar!=null">
+                us_rest_dollar=#{usRestDollar},
+            </if>
+            <if test="usProfitAmount!=null">
+                us_profit_amount=#{usProfitAmount},
+            </if>
+            <if test="usProfitPercent!=null">
+                us_profit_percent=#{usProfitPercent},
+            </if>
+            <if test="usFrozenCapital!=null">
+                us_frozen_capital=#{usFrozenCapital},
+            </if>
+        </set>
+        WHERE user_id=#{userId}
+    </update>
+
+    <select id="queryUserByOpenid" resultType="com.oki.stock.cloud.base.entity.User">
+        SELECT * FROM oki_user WHERE openid=#{openid}
+    </select>
+
+    <select id="queryUsersProfitAmount" resultType="com.oki.stock.cloud.base.dto.ProfitDTO">
+        SELECT s.openid,sum(s.profit_amount) profit_amount FROM stock_holder s JOIN oki_user o ON s.openid=o.openid WHERE s.stock_scope=#{scope} GROUP BY o.openid;
+    </select>
+
+    <update id="updateUserHkAssetsBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE oki_user
+            <set>
+                <if test="item.assets!=null">
+                    hk_assets=${item.assets},
+                </if>
+                <if test="item.profitAmount!=null">
+                    hk_profit_amount=${item.profitAmount},
+                </if>
+                <if test="item.profitPercent!=null">
+                    hk_profit_percent='${item.profitPercent}',
+                </if>
+            </set>
+            WHERE openid='${item.openid}'
+        </foreach>
+    </update>
+
+    <update id="updateUserUsAssetsBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE oki_user
+            <set>
+                <if test="item.assets!=null">
+                    us_assets=${item.assets},
+                </if>
+                <if test="item.profitAmount!=null">
+                    us_profit_amount=${item.profitAmount},
+                </if>
+                <if test="item.profitPercent!=null">
+                    us_profit_percent='${item.profitPercent}',
+                </if>
+            </set>
+            WHERE openid='${item.openid}'
+        </foreach>>
+
+    </update>
+
+</mapper>

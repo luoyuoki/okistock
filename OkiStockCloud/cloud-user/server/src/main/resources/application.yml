@@ -1,0 +1,39 @@
+server:
+  port: 8001
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    instance-id: user-server-8001
+    prefer-ip-address: true
+
+spring:
+  application:
+    name: user-server
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/okistock?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&autoReconnect=true
+    username: root
+    password: 123456
+    dbcp2:
+      min-idle: 5
+      initial-size: 5
+      max-total: 5
+      max-wait-millis: 200
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: com.oki.stock.cloud.base.entity
+  mapper-locations: classpath:mapper/*.xml
+
+user:
+  assets:
+    hk: 200000
+    us: 20000
+
+wechat:
+  appId: wxa91b776be19bfa15
+  appSecret: 39b45862cbd4d0543a43855259e337f2

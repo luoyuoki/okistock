@@ -1,0 +1,26 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    instance-id: gateway
+    prefer-ip-address: true
+
+spring:
+  application:
+    name: gateway
+
+zuul:
+  routes:
+    user:
+      path: /user/**
+      serviceId: user-client
+      stripPrefix: false
+    stock:
+      path: /stock/**
+      serviceId: stock-client
+      stripPrefix: false
+

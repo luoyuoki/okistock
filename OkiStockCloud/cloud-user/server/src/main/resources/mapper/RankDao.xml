@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oki.stock.cloud.user.server.dao.RankDao">
+
+
+    <select id="queryHkRankList" resultType="com.oki.stock.cloud.base.dto.HkRankDTO">
+        SELECT nick_name,avatar_url,hk_profit_percent FROM oki_user ORDER BY hk_assets DESC LIMIT 50;
+    </select>
+
+    <select id="queryUsRankList" resultType="com.oki.stock.cloud.base.dto.UsRankDTO">
+        SELECT nick_name,avatar_url,us_profit_percent FROM oki_user ORDER BY us_assets DESC LIMIT 50;
+    </select>
+</mapper>
