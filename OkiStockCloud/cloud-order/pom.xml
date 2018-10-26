@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.oki.stock</groupId>
-    <artifactId>cloud-user</artifactId>
+    <artifactId>cloud-order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -14,8 +13,8 @@
         <module>server</module>
     </modules>
 
-    <name>cloud-user</name>
-    <description>Demo project for Spring Boot</description>
+    <name>cloud-order</name>
+    <description>order micro service for Oki Stock</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -30,7 +29,7 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
         <cloud-base.version>0.0.1-SNAPSHOT</cloud-base.version>
-        <cloud-order-client.version>0.0.1-SNAPSHOT</cloud-order-client.version>
+        <cloud-user-client.version>0.0.1-SNAPSHOT</cloud-user-client.version>
     </properties>
 
     <dependencyManagement>
@@ -49,10 +48,11 @@
             </dependency>
             <dependency>
                 <groupId>com.oki.stock</groupId>
-                <artifactId>cloud-order-client</artifactId>
-                <version>${cloud-order-client.version}</version>
+                <artifactId>cloud-user-client</artifactId>
+                <version>${cloud-user-client.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 </project>

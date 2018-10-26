@@ -23,4 +23,8 @@ zuul:
       path: /stock/**
       serviceId: stock-client
       stripPrefix: false
+    order:
+      path: /order/**
+      serviceId: order-client
+      stripPrefix: false
 

@@ -1,6 +1,7 @@
 package com.oki.stock.cloud.user.client;
 
 import com.oki.stock.cloud.base.common.RespResult;
+import com.oki.stock.cloud.base.dto.UserDTO;
 import com.oki.stock.cloud.base.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -30,4 +31,7 @@ public interface UserClient {
 
     @PostMapping("/user/get")
     User getUserByOpenid(@RequestParam("openid") String openid);
+
+    @PostMapping("/user/getInfo")
+    UserDTO getUserInfoByOpenid(@RequestParam("openid") String openid);
 }

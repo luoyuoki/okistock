@@ -5,11 +5,13 @@ import com.oki.stock.cloud.base.common.CodeMsg;
 import com.oki.stock.cloud.base.common.RespResult;
 import com.oki.stock.cloud.base.common.TradingFlag;
 import com.oki.stock.cloud.base.dto.HkRankDTO;
+import com.oki.stock.cloud.base.dto.HolderDTO;
 import com.oki.stock.cloud.base.dto.UsRankDTO;
 import com.oki.stock.cloud.base.dto.UserDTO;
 import com.oki.stock.cloud.base.entity.User;
 import com.oki.stock.cloud.base.vo.LoginVO;
 import com.oki.stock.cloud.base.vo.MyMainInfoVO;
+import com.oki.stock.cloud.order.client.OrderClient;
 import com.oki.stock.cloud.user.server.service.RankService;
 import com.oki.stock.cloud.user.server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,9 @@ public class UserServerController {
     @Autowired
     private RankService rankService;
 
+    @Autowired
+    private OrderClient orderClient;
+
     @Value("${wechat.appId}")
     private String appId;
 
@@ -52,11 +57,14 @@ public class UserServerController {
     private String usAssets;
 
     @GetMapping("/my")
-    public RespResult getMyMainInfo(String openid){
+    public RespResult getMyMainInfo(String openid) {
         UserDTO user = userService.getUserInfoByOpenid(openid);
         if (user != null) {
             MyMainInfoVO infoVO = new MyMainInfoVO();
             infoVO.setUser(user);
+
+            List<HolderDTO> holderList = orderClient.getHolderList(openid);
+            infoVO.setHolderList(holderList);
             // TODO
 //            infoVO.setTradingFlag(SpringContextUtil.getBean(TradingFlag.class));
             return RespResult.bySuccess(infoVO);
@@ -124,8 +132,14 @@ public class UserServerController {
     }
 
     @PostMapping("/get")
-    public User getUserByOpenid(@RequestParam("openid") String openid){
+    public User getUserByOpenid(@RequestParam("openid") String openid) {
         return userService.getUserByOpenid(openid);
+    }
+
+
+    @PostMapping("/getInfo")
+    public UserDTO getUserInfoByOpenid(@RequestParam("openid") String openid) {
+        return userService.getUserInfoByOpenid(openid);
     }
 
 }

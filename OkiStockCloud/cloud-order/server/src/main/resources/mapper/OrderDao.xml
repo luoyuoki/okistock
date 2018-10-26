@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oki.stock.cloud.order.server.dao.OrderDao">
+
+    <select id="queryNewOrders" resultType="com.oki.stock.cloud.base.entity.Order">
+        SELECT order_id,stock_name,quote_price,quote_nums,order_type,order_status,commit_time FROM order_info WHERE openid=#{openid}
+    </select>
+
+    <select id="querySuccessOrders" resultType="com.oki.stock.cloud.base.entity.Order">
+        SELECT order_id,order_type,stock_name,exchange_price,quote_nums,exchange_time FROM order_info
+        WHERE openid=#{openid} AND order_status='1'
+    </select>
+
+    <select id="queryUserHoldersByOpenid" resultType="com.oki.stock.cloud.base.entity.Holder">
+        SELECT stock_id,stock_name,stock_scope,stock_nums,cost_price,profit_amount,profit_percent FROM stock_holder WHERE openid=#{openid}
+    </select>
+
+    <select id="queryUserHolder" resultType="com.oki.stock.cloud.base.entity.Holder">
+        SELECT * FROM stock_holder WHERE openid=#{openid} AND stock_id=#{stockId}
+    </select>
+
+    <select id="queryUserHolderByStockName" resultType="com.oki.stock.cloud.base.entity.Holder">
+        SELECT holder_id,openid,cost_price,stock_nums,stock_scope FROM stock_holder WHERE stock_name=#{stockName}
+    </select>
+
+</mapper>

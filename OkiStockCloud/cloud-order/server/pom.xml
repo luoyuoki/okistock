@@ -5,26 +5,34 @@
 
     <parent>
         <groupId>com.oki.stock</groupId>
-        <artifactId>cloud-user</artifactId>
+        <artifactId>cloud-order</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cloud-user-server</artifactId>
+    <artifactId>cloud-stock-server</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oki.stock</groupId>
+            <artifactId>cloud-base</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oki.stock</groupId>
+            <artifactId>cloud-user-client</artifactId>
         </dependency>
 
         <dependency>
@@ -57,32 +65,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.oki.stock</groupId>
-            <artifactId>cloud-base</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.oki.stock</groupId>
-            <artifactId>cloud-order-client</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
