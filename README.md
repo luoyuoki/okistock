@@ -17,9 +17,10 @@
 	* cloud-gateway : Zuul
 	* cloud-stock : 股票服务
 	* cloud-user : 用户服务
-	* cloud-order : 订单服务(代码待上传)
+	* cloud-order : 订单服务
 	* cloud-trade : 交易服务(代码待上传)
 	* cloud-normal : 一般服务(代码待上传)
+	* cloud-config : 服务统一配置(代码待上传)
 	
 * OkiStockSpider
 
