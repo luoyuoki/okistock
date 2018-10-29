@@ -32,3 +32,16 @@
 [茉莉炒股从 0 到 1](https://github.com/luoyuoki/okistock/wiki/%E8%8C%89%E8%8E%89%E7%82%92%E8%82%A1%E4%BB%8E-0-%E5%88%B0-1)
 
 [茉莉炒股微服务化改造](https://github.com/luoyuoki/okistock/wiki/%E8%8C%89%E8%8E%89%E7%82%92%E8%82%A1%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8C%96%E6%94%B9%E9%80%A0)
+
+
+**应用截图**
+
+
+![](https://github.com/luoyuoki/images/blob/master/app/1.jpg?raw=true)	![](https://github.com/luoyuoki/images/blob/master/app/2.jpg?raw=true)
+	![](https://github.com/luoyuoki/images/blob/master/app/3.jpg?raw=true)
+		![](https://github.com/luoyuoki/images/blob/master/app/4.jpg?raw=true)
+			![](https://github.com/luoyuoki/images/blob/master/app/5.jpg?raw=true)
+				![](https://github.com/luoyuoki/images/blob/master/app/6.jpg?raw=true)
+					![](https://github.com/luoyuoki/images/blob/master/app/7.jpg?raw=true)
+						![](https://github.com/luoyuoki/images/blob/master/app/8.jpg?raw=true)
+							![](https://github.com/luoyuoki/images/blob/master/app/9.jpg?raw=true)		
